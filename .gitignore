@@ -1,3 +1,4 @@
 data/
 mongodata/
 node_modules
+.env
