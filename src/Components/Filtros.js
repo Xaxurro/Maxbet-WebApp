@@ -12,7 +12,7 @@ const ContenedorFiltro = styled.div`
     display: flex;
     align-items: stretch;
     justify-content: flex-end;
-    width: 95%;
+    width: 95vw;
     padding:2%;  
 `
 
