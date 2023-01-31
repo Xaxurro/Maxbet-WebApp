@@ -24,8 +24,10 @@ const ProductSchema = mongoose.Schema({
 })
 
 ProductSchema.statics.register = register;
+ProductSchema.statics.getAll = getAll;
 
-mongoose.model('product', ProductSchema, 'children');
+const product = mongoose.model('product', ProductSchema, 'products');
+module.exports = product;
 
 //Methods
 
@@ -37,11 +39,6 @@ function register(productInfo) {
     return this.findOne({serial: productInfo.serial})
         .then(product => {
             if(product) throw new Error('product already exists');
-            if(productInfo.children) {
-                productInfo.children.forEach(productChild => {
-                    register(productChild);
-                });
-            }
 
             const newProduct = {
                 serial: productInfo.serial,
@@ -53,4 +50,8 @@ function register(productInfo) {
             return this.create(newProduct);
         })
         .then(productCreated => productCreated)
+}
+
+function getAll() {
+    return this.find().then(data => data);
 }
