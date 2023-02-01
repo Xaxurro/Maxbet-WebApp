@@ -21,7 +21,7 @@ const ProductSchema = mongoose.Schema({
         trim: true,
     },
     children: {
-        type: [mongoose.Schema.Types.ObjectId],
+        type: [this],
         ref: 'products',
     },
 })
@@ -31,9 +31,8 @@ ProductSchema.statics.register = register;
 ProductSchema.statics.getAll = getAll;
 
 // Creacion del modelo 'product', que usa el Schema 'ProductSchema', y cuya colleccion es llamada 'products'
-const product = mongoose.model('product', ProductSchema, 'products');
 // Se exporta como modulo a ---------------------------------------------------------------------------------------
-module.exports = product;
+module.exports = product = mongoose.model('product', ProductSchema, 'products');
 
 
 //Methods
@@ -53,7 +52,7 @@ function register(productInfo) {
                 serial: productInfo.serial,
                 state: productInfo.state,
                 origin: productInfo.origin,
-                children: productInfo.children,
+                children: productInfo.children
             };
 
             // Envia el doc a la DB

@@ -7,6 +7,13 @@ module.exports.register = function (req, res) {
     if (!req.body.product) return response.error(req, res, 'product info not found', 200);
 
     try {
+        if (req.body.product.children) {
+            req.body.product.children.forEach(child => {
+                console.log(child)
+                Product.register(child)
+                    .catch(error => response.error(req, res, error.message, 200));
+            });
+        }
         Product.register(req.body.product)
             .then(() => {
                 // Envia un response de que se creo el producto correctamente
