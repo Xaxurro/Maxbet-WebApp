@@ -7,13 +7,6 @@ module.exports.register = function (req, res) {
     if (!req.body.product) return response.error(req, res, 'product info not found', 200);
 
     try {
-        // if (req.body.product.children) {
-        //     req.body.product.children.forEach(child => {
-        //         console.log(child)
-        //         Product.register(child)
-        //             .catch(error => response.error(req, res, error.message, 200));
-        //     });
-        // }
         ProductModel.register(req.body.product, ProductModel)
             .then(() => {
                 // Envia un response de que se creo el producto correctamente
@@ -26,8 +19,20 @@ module.exports.register = function (req, res) {
     }
 }
 
+module.exports.unRegister = function (req, res) {
+    // Devuelve un Error si no encuentra un 'product' en la request
+    if (!req.body.serial) return response.error(req, res, 'serial not found', 200);
+    try {
+        ProductModel.unRegister(req.body.serial, ProductModel)
+        .then(() => {
+            response.success(req, res, "Producto eliminado correctamente.");
+        }).catch(error => response.error(req, res, error.message, 200));
+    } catch (error) {
+        response.error(req, res, error.message);
+    }
+}
+
 module.exports.getAll = function (req, res) {
-    
     try {
         ProductModel.getAll()
         .then(data => {

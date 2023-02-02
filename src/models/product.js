@@ -28,6 +28,7 @@ const ProductSchema = mongoose.Schema({
 
 // Define una funcion estatica llamada 'register' y otra llamada 'getAll'
 ProductSchema.statics.register = register;
+ProductSchema.statics.unRegister = unRegister;
 ProductSchema.statics.getAll = getAll;
 
 // Creacion del modelo 'product', que usa el Schema 'ProductSchema', y cuya colleccion es llamada 'products'
@@ -41,8 +42,6 @@ function register(productInfo, model) {
     if(!productInfo.serial) throw new Error('serial is required');
     if(!productInfo.state) throw new Error('state is required');
     if(!productInfo.origin) throw new Error('origin is required');
-
-    console.log("\x1b[41mConstructor:\x1b[0m " + this.constructor.name);
 
     return model.findOne({serial: productInfo.serial})
         .then(async product => {
@@ -71,9 +70,20 @@ function register(productInfo, model) {
         .then(productCreated => productCreated)
 }
 
-// function exists(productInfo) {
+function unRegister(serial, model) {
+    // Si no existe el serial, arrojara un Error
+    if(!serial) throw new Error('serial is required');
 
-// }
+    // Busca el id del padre
+    model.findOne({serial: serial}).then(parent => {
+        // Quita la referencia de los hijos
+        model.updateMany({parent: parent._id}, {$unset: {parent: ""}});
+    })
+
+    // Elimina al padre
+    return model.deleteOne({serial: serial});
+}
+
 
 function getAll() {
     // Busca los docs que pasen por el filtro de la funcion find (como no hay filtro los busca todos)
