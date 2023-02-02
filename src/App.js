@@ -53,7 +53,7 @@ function App() {
       <nav>
         <UL>          
           <LI>
-            <NavLink  to="/"> Maxbet</NavLink>
+            Maxbet Logo
           </LI>
           <LI>
             <NavLink  to="/Dashboard"> Dashboard</NavLink>
@@ -75,11 +75,10 @@ function App() {
       <section>
             
         <Routes> {/*Switch fue reemplazado por Routes */}
-          <Route path='/Dashboard' element={<Dashboard/>}/>            
           <Route path='/WorkLists' element={<WorkLists/>}/>             
           <Route path='/Employees' element={<Employees/>}/>             
           <Route path='/Inventory' element={<Inventory/>}/> 
-          <Route exact path="/" element={<Layout><h1>Inicio</h1></Layout>}/> {/*La ruta de inicio debe estar al final, la declaracion exact se suele usar solo en la raiz*/}            
+          <Route exact path='/Dashboard' element={<Dashboard/>}/>{/*La ruta de inicio debe estar al final, la declaracion exact se suele usar solo en la raiz*/}          
         </Routes>
 
       </section>

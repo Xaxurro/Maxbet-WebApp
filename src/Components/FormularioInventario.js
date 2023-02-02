@@ -42,6 +42,8 @@ function FormInventario() {
       onSubmit={(values)=>{console.log(values)}}> 
       <Form> 
       <ContenedorForm>
+        <TextInput name="nSerie" label= "Numero de Serie"/>
+        <br />                
         <TextInput name="marca" label= "Marca"/>
         <br />
         <TextInput name="modelo" label= "Modelo"/>
@@ -57,8 +59,6 @@ function FormInventario() {
         <br />                
         {/*<TextInput name="fechaIngreso" label= "Fecha de ingreso"/>*/}
         <br />                
-        <TextInput name="nSerie" label= "Numero de Serie"/>
-        <br />                
         {/*<TextInput name="foto" label= "Foto"/>*/}
         <br />                
         <TextInput name="pronostico" label= "Pronostico"/>
@@ -67,8 +67,7 @@ function FormInventario() {
         <br />                    
         <TextInput name="problemas" label= "Problemas"/>
         <br />                                
-        <Button type='submit'>Enviar</Button>
-        <Button type='reset'>Limpiar</Button>
+        
         </ContenedorForm>
       </Form>      
     </Formik>
