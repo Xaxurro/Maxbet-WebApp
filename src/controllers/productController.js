@@ -40,7 +40,7 @@ module.exports.update = function (req, res) {
 module.exports.getOne = function (req, res) {
     try {
         console.log(req.params.serial);
-        ProductModel.getOne(req.params.serial)
+        ProductModel.getOne(req.params.serial, ProductModel)
         .then(data => {
             response.getAllData(req, res, data);
         }).catch(error => response.error(req, res, error.message, 200));

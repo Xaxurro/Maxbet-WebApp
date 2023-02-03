@@ -105,10 +105,21 @@ function update(productInfo, model) {
         .then(productCreated => productCreated)
 }
 
-function getOne(serial) {
+function getOne(serial, model) {
     // Busca el doc que pase por el filtro de la funcion find
     // Despues envia los datos
-    return this.find({serial: serial}).then(data => data);
+    return this.findOne({serial: serial}).then(async data => {
+        if (!data) throw new Error("Product doesn't exists");
+
+        const product = {
+            product: data
+        }
+
+        let children = await model.find({parent: data._id}).then(children => children);
+        if(children) product["children"] = children;
+
+        return product;
+    });
 }
 
 function getAll() {
