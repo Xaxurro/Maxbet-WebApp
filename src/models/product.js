@@ -75,9 +75,9 @@ function unRegister(serial, model) {
     if(!serial) throw new Error('serial is required');
 
     // Busca el id del padre
-    model.findOne({serial: serial}).then(parent => {
+    model.findOne({serial: serial}).then(async parent => {
         // Quita la referencia de los hijos
-        model.updateMany({parent: parent._id}, {$unset: {parent: ""}});
+        await model.updateMany({parent: parent._id}, {$unset: {parent: ""}});
     })
 
     // Elimina al padre

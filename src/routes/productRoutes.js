@@ -4,9 +4,9 @@ const router = express.Router();
 
 const productController = require('../controllers/productController');
 
-router.post('/register', productController.register);
-router.get('/products', productController.getAll);
-router.delete('/unregister', productController.unRegister);
+router.post('/', productController.register);
+router.get('/', productController.getAll);
+router.delete('/', productController.unRegister);
 
 // Exporta las rutas a app.js
 module.exports = router;
