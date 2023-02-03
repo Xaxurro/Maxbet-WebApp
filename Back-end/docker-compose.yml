@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  mongo:
+    image: mongo:5.0
+    container_name: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./data:/data/db
+    networks:
+      - mongo-network
+
+  mongo-express:
+    image: mongo-express:0.54
+    container_name: mongo-express
+    ports:
+      - 8081:8081
+    depends_on:
+      - mongo
+    environment:
+      ME_CONFIG_BASICAUTH_USERNAME: maxbet
+      ME_CONFIG_BASICAUTH_PASSWORD: maxbet123
+      ME_CONFIG_MONGODB_PORT: 27017
+      ME_CONFIG_MONGODB_ADMINUSERNAME: maxbet
+      ME_CONFIG_MONGODB_ADMINPASSWORD: maxbet123
+    links:
+      - mongo
+    networks:
+      - mongo-network
+
+networks: 
+  mongo-network:
+    driver: bridge

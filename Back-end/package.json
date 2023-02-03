@@ -1,0 +1,33 @@
+{
+  "name": "maxbet-webapp",
+  "version": "1.0.0",
+  "description": "WebApp para organizar productos",
+  "main": "app.js",
+  "scripts": {
+    "dev": "nodemon ./src/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Xaxurro/Maxbet-WebApp.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Xaxurro/Maxbet-WebApp/issues"
+  },
+  "homepage": "https://github.com/Xaxurro/Maxbet-WebApp#readme",
+  "dependencies": {
+    "@types/node": "^18.11.18",
+    "bcrypt": "^5.1.0",
+    "body-parser": "^1.20.1",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
+    "mongoose": "^6.9.0",
+    "nodemailer": "^6.9.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
