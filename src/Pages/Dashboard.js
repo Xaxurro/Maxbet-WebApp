@@ -1,7 +1,11 @@
-import { Component } from "react";
 import styled from "styled-components";
 import Layout from "../Components/Layout";
+import React from 'react';
 
+//////////////////////////////////////////////////////////////
+/**
+ * Componentes de estilo
+ */
 const Container = styled.div`
     display:grid;
     width:100%;
@@ -27,29 +31,33 @@ const ElementoGrid1 = styled.div`
   padding: 0.25rem;
   width: 100%;
   height: 100%;
-` 
+`
 const ElementoGrid2 = styled(ElementoGrid1)``;
 const ElementoGrid3 = styled(ElementoGrid1)``;
 const ElementoGrid4 = styled(ElementoGrid1)``;
-class Dashboard extends Component{
-    render(){
-        return(
-            <Layout>
-                <Container>
-                    <ContentBox>
-                        <ElementoGrid1>Uno</ElementoGrid1>
-                        <ElementoGrid2>dos</ElementoGrid2>
-                        <ElementoGrid3>tres</ElementoGrid3>
-                        <ElementoGrid4>cuatro</ElementoGrid4>
-                    </ContentBox>
-                    
-                    
-                    
-                </Container>
-            </Layout>
-        )
-    }
+//////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////
 
+//////////////////////////////////////////////////////////////
+/**
+ * TODO
+ * @returns placeholders de layout tipo grid
+ */
+function Dashboard() {
+    return (
+        <Layout>
+            <Container>                
+                <ContentBox>
+                    <ElementoGrid1>Uno</ElementoGrid1>
+                    <ElementoGrid2>dos</ElementoGrid2>
+                    <ElementoGrid3>tres</ElementoGrid3>
+                    <ElementoGrid4>cuatro</ElementoGrid4>
+                </ContentBox>
+            </Container>
+        </Layout>
+    )
 }
+//////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////
 
 export default Dashboard

@@ -1,5 +1,4 @@
-import { Formik, Form, Field, ErrorMessage } from 'formik' // useFormik es un hook
-import Button from './Button'
+import { Formik, Form} from 'formik' // useFormik es un hook
 import TextInput from "./TextInput"
 import Select from "./Select"
 import styled from 'styled-components'

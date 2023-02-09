@@ -4,7 +4,7 @@ import { Table, Row, Col } from 'antd';
 import axios from 'axios';
 import { Modal, Button } from 'antd';
 
-const TableData = () =>{
+const TableData = ({header}) =>{
   const [data, setdata] = useState([]);
   const [modaldata, setmodaldata] = useState([]);
 
@@ -76,7 +76,7 @@ const TableData = () =>{
 
   return (
     <Layout>
-      <Header style={{background:'white', fontWeight:'bold',fontSize:"120%"}}>Inventory</Header>
+      <Header style={{background:'white', fontWeight:'bold',fontSize:"120%"}}>{header}</Header>
       <Content style={{ padding: 50 }}>
         <Row>
           <Col span={3} />

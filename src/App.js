@@ -1,27 +1,21 @@
-import { Component } from "react";
-import { useMatch, Route, NavLink, Routes, useParams } from 'react-router-dom';
+import {Route, NavLink, Routes} from 'react-router-dom';
 import styled from "styled-components";
 import Employees from './Pages/Employees';
 import Dashboard from './Pages/Dashboard';
 import WorkLists from './Pages/WorkLists';
 import Inventory from './Pages/Inventory';
-import Layout from "./Components/Layout";
+import Login from './Pages/Login/Login';
+import Signup from './Pages/Login/Signup';
+import { auth, logout } from './firebase';
+import { useState, useEffect } from 'react';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { ProtectedRoute } from './Components/Routes/ProtectedRoute';
+import { SpecialRoute } from './Components/Routes/SpecialRoute';
 
-
-
-
+/////////////////////////////////////
 /**
-class App extends Component{ los componentes basados en clase permiten tener estados y hooks de ciclo de vida, los componentes funcionales no
-  render(){
-    return(
-      <div>
-        <Index/>
-      </div>
-    )
-  }
-}
+ * Componentes de estilo
  */
-
 const UL = styled.ul`
   display: flex;
   align-items: stretch;
@@ -37,53 +31,95 @@ const LI = styled.li`
   flex: 0 1 auto;
   list-style-type: none;
 `
+/////////////////////////////////////
+/////////////////////////////////////
 
+
+
+/////////////////////////////////////
 /**
- Al estar dentro de un componente como inventario, con hartos elementos dentro,cada uno con su propia url 
- es mejor usar la propiedad match.url para obtener el link, match es el nombre de referencia para el hook useMatch
- <Link to= {`${match.url}/item-1`} item 1 </Link>> o algo asi para los links y 
- <Route path = {`${match.path}/:item_id`}> para los path o rutas (no url)
-  */
-
- // En vez de usar Link, es mejor usar el componente NavLink, porque es dinamico y entrega un feedback al usuario sobre cual es el link activo (aumentar tamanio, negrita, etc)
- // la propiedad activeClassName = "cualquiernombre" permite cambiarle el nombre por defecto "active" a la clase (para css) cuando se usa NavLink
+ * Primero se declaran los hooks para mantener los estados sobre si hay algun usuario logeado o no, o si el componente aun está cargando.
+ * 
+ * Cuando un usuario está logeado se setea el estado "logged" como true, y se setea falso cuando se desconecta.
+ * 
+ * La constante Nav contiene los elementos que muestran la navBar, esta barra solo se muestra si hay algun usuario logeado
+ * 
+ * @returns rutas de navegacion y navbar cuando corresponde. Cada ruta primero pasa por un componente (ProtectedRoutes) que comprueba si hay algun usuario conectado para dejarlo pasar a su componente interno,
+ * si no lo hay, lo redirige al login. Para el login y registro ocurre a la inversa, el componente (SpecialRoute) solo deja pasar si no está logeado, sino lo redirige al Dashboard
+ */
 function App() {
-  return (
-    <div>
-      <nav>
-        <UL>          
+
+  const [logged, setLogged] = useState(false);  
+  const [user, loading, error] = useAuthState(auth);
+  useEffect(() => {
+      if (loading) return
+      else if (!user || null) return setLogged(false)
+      else setLogged(true)
+  }, [user, loading]);
+  
+  const Nav = (
+    <nav>
+        <UL>
           <LI>
             Maxbet Logo
           </LI>
           <LI>
-            <NavLink  to="/Dashboard"> Dashboard</NavLink>
+            <NavLink to="/dashboard"> Dashboard</NavLink>
           </LI>
           <LI>
-            <NavLink  to="/WorkLists"> WorkLists</NavLink>
+            <NavLink to="/workLists"> WorkLists</NavLink>
           </LI>
           <LI>
-            <NavLink  to="/Employees"> Employees</NavLink>
+            <NavLink to="/employees"> Employees</NavLink>
           </LI>
           <LI>
-            <NavLink  to="/Inventory"> Inventory</NavLink>
+            <NavLink to="/inventory"> Inventory</NavLink>
           </LI>
           <LI>
-            <div>Perfil</div>
+            <button onClick={logout}>Log out</button>
           </LI>
         </UL>
       </nav>
-      <section>
-            
-        <Routes> {/*Switch fue reemplazado por Routes */}
-          <Route path='/WorkLists' element={<WorkLists/>}/>             
-          <Route path='/Employees' element={<Employees/>}/>             
-          <Route path='/Inventory' element={<Inventory/>}/> 
-          <Route exact path='/Dashboard' element={<Dashboard/>}/>{/*La ruta de inicio debe estar al final, la declaracion exact se suele usar solo en la raiz*/}          
-        </Routes>
+  )
 
+  return (    
+    <div>    
+    {logged ? Nav: null}
+    <section>
+        <Routes>          
+          <Route element={<ProtectedRoute/>}>
+            <Route path='/' element={<Dashboard/>}/>
+          </Route>
+
+          <Route element={<ProtectedRoute/>}>
+            <Route path='/dashboard' element={<Dashboard/>}/>
+          </Route>
+          <Route element={<ProtectedRoute/>}>
+            <Route path='/inventory' element={<Inventory/>}/>
+          </Route>
+          <Route element={<ProtectedRoute/>}>
+            <Route path='/worklists' element={<WorkLists/>}/>
+          </Route>
+          <Route element={<ProtectedRoute/>}>
+            <Route path='/employees' element={<Employees/>}/>
+          </Route>
+          
+          <Route element={<SpecialRoute/>}>
+            <Route path='/login' element={<Login/>}/>
+          </Route>
+          <Route element={<SpecialRoute/>}>
+            <Route path='/signup' element={<Signup/>}/>
+          </Route>          
+
+          <Route element={<ProtectedRoute/>}>
+            <Route path='*' element={<Dashboard/>}/>
+          </Route>
+
+        </Routes>
       </section>
     </div>
   )
 }
-
+/////////////////////////////////////
+/////////////////////////////////////
 export default App;

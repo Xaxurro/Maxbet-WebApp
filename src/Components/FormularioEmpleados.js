@@ -64,8 +64,7 @@ function FormEmpleados() {
         </Select>
         <br />                
         
-        <Button type='submit'>Enviar</Button>
-        <Button type='reset'>Limpiar</Button>
+        
         </ContenedorForm>
       </Form>      
     </Formik>
