@@ -4,6 +4,7 @@ import { Legend } from "../Components/Legend"
 import { Table } from "../Components/Table";
 import { Filter } from "../Components/Filter";
 import { Modal } from "../Components/Modal";
+import { ButtonFile } from "../Components/ButtonFile";
 
 import "../Css/Employees.css"
 
@@ -26,18 +27,45 @@ export function Employees(){
             <div className="right">
                 <Filter data={Filters}/>
                 <Button className="Button" type="submit" Text ="Search"/>
-                <Button State={State} ChangeState={changeState} className="Button" Text ="Add Employee" onClick ={ toggle}/>
+                <Button className="Button" Text ="Add Employee" onClick ={toggle}/>
                 {/* <button  className="Button" onclick ={() => changeState(!State)}>addemploye</button> */}
                     {/* // <Modal State = {modalState}  changeState= {changeState}>
                     //     <input type="submit" placeholder="Hola Mundo"/>
                     // </Modal>}/> */}
             </div>
         </div>
-        <Modal State = {State}  ChangeState= {toggle}>
-            <div>
+        <Modal State = {State}  ChangeState= {toggle} Tittle = "Add Employee">
+            <div className="ModalBody">
+                <div className="ModalRight">
+                    <label for="EName">Employee Name:</label>
+                    <input id="EName"type="text"/>
 
-                {/* <h1>{State}</h1> */}
-                <input type="text" placeholder="Hola Mundo"/>
+                    <label for="ERut">Employee Rut:</label>
+                    <input id="ERut"type="text"/>
+
+                    <label for="EMail">Employee Mail:</label>
+                    <input id="EMail"type="text"/>
+
+                    <label for="EDirection">Employee Direcction:</label>
+                    <input id="EDirection"type="text"/>
+
+                    <label for="EPhone">Employee Phone:</label>
+                    <input id="EPhone"type="text"/>
+                </div>
+
+
+                <div className="Left">
+                <label for="ChooseFile">
+                    <ButtonFile id="ChooseFile" className="ButtonFile" type="file" accept="image/png, image/jpg, image/gif, image/jpeg"/>
+                </label>
+                </div>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <Button className='Button' Text='Add Employee'></Button>
+                <Button className='Button' Text='Cancel' onClick={toggle}></Button>
             </div>
         </Modal>
         

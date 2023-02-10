@@ -3,10 +3,10 @@ import "../Css/Button.css"
 // import { useState } from "react";
 
 
-export function Button(props){
+export function ButtonFile(props){
     // const [State, changeState] = useState(false);
 
     return(
-        <button type= {props.type} className={props.className} onClick={props.onClick} >{props.Text}</button>
+        <input className={props.className} type={props.type} accept={props.accept}>{props.Text}</input>
     );
 }

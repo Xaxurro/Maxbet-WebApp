@@ -18,13 +18,17 @@
 }
 .Close{
     position: absolute;
-    top: 20px;
-    right: 20px;
+    /* top: px; */
+    right: 30px;
     cursor: pointer;
-    
-    
+    border: none;
+    background:inherit;
 
     
+}
+.ButtonFile{
+    /* position: absolute; */
+    /* left: 20%; */
 }
 
 
