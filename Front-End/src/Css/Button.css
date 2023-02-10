@@ -1,0 +1,41 @@
+.Button{
+    background-color: #FF9617;
+    border: none;
+    border-radius: 61px;
+    font-family: 'Ubuntu',sans-serif;
+    margin: 0% 0% 0% 3%;
+    padding: 0% 5%;
+    cursor: pointer;
+    /* align-self:center;
+    padding: 15px 50px;
+    line-height: normal; */
+    /* padding: 14px 40px ;
+    display: inline-block; */
+}
+.Button:hover{
+    background-color: #000;
+    color:#fff;
+}
+.Close{
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+    
+    
+
+    
+}
+
+
+
+
+/* .Button{
+    background-color: #4CAF50; 
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+} */

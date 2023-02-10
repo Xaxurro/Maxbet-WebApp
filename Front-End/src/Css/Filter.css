@@ -1,0 +1,25 @@
+.Filter input{
+    width: 60%;
+    height: 25px;
+    margin: 0 auto;
+    border: none;
+    border-radius: 5px 0px 0px 5px;
+    display: inline-flex;
+    align-self: center;
+
+}
+.Filter select{
+    width: 60%;
+    height: 25px;
+    margin: 0 auto;
+    border: none;
+    border-radius:  0px 5px 5px 0px;
+    display: inline-flex;
+    align-self: center;
+    background-color: ghostwhite;
+}
+.Filter{
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+}
