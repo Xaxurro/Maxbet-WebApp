@@ -4,7 +4,7 @@ const router = express.Router();
 
 const userController = require('../controllers/userController');
 
-router.post('/signup', userController.signup);
+router.post('/', userController.signup);
 
 // Exporta las rutas a app.js
 module.exports = router;

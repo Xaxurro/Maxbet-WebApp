@@ -1,52 +1,56 @@
 const mongoose = require('mongoose');
-// Permite encriptar las contraseñas
-const bcrypt = require('bcrypt');
 
 // Estructura del documento inicial en Mongo, para más info:
 // https://mongoosejs.com/docs/schematypes.html
-const ProductSchema = mongoose.Schema({
+const ProductSchema = mongoose.Schema(
+{
     serial: {
         type: String,
-        require: true,
+        required: true,
         uppercase: true,
         unique: true,
     },
     state: {
         type: String,
-        require: true,
+        required: true,
     },
     origin: {
         type: String,
-        require: true,
+        required: true,
         trim: true,
     },
     parent: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'products',
     },
-})
+    history: [{
+        date: {
+            type: Date,
+            default: Date.now(),
+        },
+        change: {
+            type: String,
+            uppercase: true,
+            required: [true, "Change is required"],
+        },
+        comment: {
+            type: String,
+            uppercase: true,
+        },
+    }],
+},)
 
-// Define una funcion estatica llamada 'register' y otra llamada 'getAll'
-ProductSchema.statics.register = register;
-ProductSchema.statics.update = update;
-ProductSchema.statics.getOne = getOne;
-ProductSchema.statics.getAll = getAll;
-ProductSchema.statics.unRegister = unRegister;
-
-// Creacion del modelo 'product', que usa el Schema 'ProductSchema', y cuya colleccion es llamada 'products'
-// Se exporta como modulo a productController.js
-module.exports = ProductModel = mongoose.model('product', ProductSchema, 'products');
-
-
-//Methods
-function register(productInfo, model) {
+// Metodos Estaticos
+ProductSchema.statics.register = function (productInfo) {
     // Si no existe el campo en el req.body, arrojara un Error
     if(!productInfo.serial) throw new Error('serial is required');
     if(!productInfo.state) throw new Error('state is required');
     if(!productInfo.origin) throw new Error('origin is required');
 
-    return model.findOne({serial: productInfo.serial})
-        .then(async product => {
+    const model = this;
+
+    return this.findOne({serial: productInfo.serial})
+        .then(async (product) => {
             // Si encuentra un producto con el mismo serial arroja un Error
             if(product) throw new Error('product already exists');
             
@@ -54,90 +58,119 @@ function register(productInfo, model) {
             const newProduct = {
                 serial: productInfo.serial,
                 state: productInfo.state,
-                origin: productInfo.origin
+                origin: productInfo.origin,
+                history: []
             };
+            
+            for (const key in newProduct) {
+                console.log("newProduct[key]");
+                console.log(newProduct[key]);
+                if (Object.hasOwnProperty.call(newProduct, key) && key != "history" && newProduct[key] != undefined) {
+                    newProduct.history.push({change: "CREADO", comment: `${key}: ${newProduct[key]}`});
+                }
+            }
             
             // Busca el padre del objeto (si es que tiene), si lo encuentra lo agrega al doc, si no arroja un Error
             if (productInfo.parent) {
-                let parentProduct = await model.findOne({serial: productInfo.parent}).then(parent => parent);
+                const parentProduct = await model.findOne({serial: productInfo.parent}).then(parent => parent);
                 if (!parentProduct) throw new Error("Parent doesn't exists");
                 newProduct["parent"] = parentProduct._id;
             }
-
 
             // Envia el doc a la DB
             return model.create(newProduct);
         })
         // Retorna el producto cerado
         .then(productCreated => productCreated)
-}
+};
 
-function update(productInfo, model) {
+ProductSchema.statics.update = function (serial, productInfo) {
     // Si no existe el campo en el req.body, arrojara un Error
-    if(!productInfo.serial) throw new Error('serial is required');
-    if(!productInfo.state) throw new Error('state is required');
-    if(!productInfo.origin) throw new Error('origin is required');
+    if(!serial) throw new Error('old serial is required');
+    
+    const model = this;
 
-    return model.findOne({serial: productInfo.serial})
-        .then(async product => {
-            // Si encuentra un producto con el mismo serial arroja un Error
-            if(product) throw new Error('product already exists');
-            
-            // Crea el documento
-            const newProduct = {
-                serial: productInfo.serial,
-                state: productInfo.state,
-                origin: productInfo.origin
-            };
-            
-            // Busca el padre del objeto (si es que tiene), si lo encuentra lo agrega al doc, si no arroja un Error
-            if (productInfo.parent) {
-                let parentProduct = await model.findOne({serial: productInfo.parent}).then(parent => parent);
-                if (!parentProduct) throw new Error("Parent doesn't exists");
-                newProduct["parent"] = parentProduct._id;
+    return this.findOne({serial: serial})
+    .then(async product => {
+        // Si encuentra un producto con el mismo serial arroja un Error
+        if(!product) throw new Error('product doesnt exists');
+        
+        // Crea el documento
+        const newProduct = {
+            serial: productInfo.serial,
+            state: productInfo.state,
+            origin: productInfo.origin,
+            history: product.history
+        };
+
+        for (const key in newProduct) {
+            console.log("newProduct[key]");
+            console.log(newProduct[key]);
+            if (Object.hasOwnProperty.call(newProduct, key) && key != "history" && newProduct[key] != undefined) {
+                newProduct.history.push({change: "MODIFICADO", comment: `${key}: ${newProduct[key]}`});
             }
+        }
+        
+        // Busca el padre del objeto (si es que tiene), si lo encuentra lo agrega al doc, si no arroja un Error
+        if (productInfo.parent) {
+            model.findOne({serial: productInfo.parent}).then(parent => {
+                if (!parent) throw new Error("Parent doesn't exists");
+                newProduct["parent"] = parent._id;
+            });
+        }
+        
+        
+        // Envia el doc a la DB
+        return model.updateOne({serial:{$eq: serial}}, newProduct);
+    })
+    // Retorna el producto cerado
+    .then(productUpdated => productUpdated)
+};
 
-
-            // Envia el doc a la DB
-            return model.create(newProduct);
-        })
-        // Retorna el producto cerado
-        .then(productCreated => productCreated)
-}
-
-function getOne(serial, model) {
+ProductSchema.statics.getOne = function (serial) {
+    if(!serial) throw new Error('serial is required');
     // Busca el doc que pase por el filtro de la funcion find
     // Despues envia los datos
+    const model = this;
+
     return this.findOne({serial: serial}).then(async data => {
         if (!data) throw new Error("Product doesn't exists");
 
         const product = {
             product: data
         }
-
+        
         let children = await model.find({parent: data._id}).then(children => children);
         if(children) product["children"] = children;
-
+        
         return product;
     });
-}
+};
 
-function getAll() {
-    // Busca los docs que pasen por el filtro de la funcion find (como no hay filtro los busca todos)
+ProductSchema.statics.getAll = function () {
+    // Busca los docs que pasen por el filtro de la funcion find
     // Despues envia los datos
-    return this.find().then(data => data);
-}
+    return this.find();
+};
 
-function unRegister(serial, model) {
+ProductSchema.statics.unRegister = function (serial) {
     // Si no existe el serial, arrojara un Error
     if(!serial) throw new Error('serial is required');
 
+    const model = this;
+
     // Busca el id del padre
-    model.findOne({serial: serial}).then(async parent => {
+    this.findOne({serial: serial}).then(async parent => {
+        if(!parent) throw new Error("Product doesn't exists");
         // Quita la referencia de los hijos
         await model.updateMany({parent: parent._id}, {$unset: {parent: ""}});
     })
 
     // Elimina al padre
-    return model.deleteOne({serial: serial});
-}
+    return this.deleteOne({serial: serial});
+};
+
+
+// Creacion del modelo 'product', que usa el Schema 'ProductSchema', y cuya colleccion es llamada 'products'
+// Se exporta como modulo a productController.js
+module.exports = ProductModel = mongoose.model('product', ProductSchema, 'products');

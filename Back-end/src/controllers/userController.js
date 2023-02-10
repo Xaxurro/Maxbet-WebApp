@@ -1,18 +1,20 @@
-const User = require('../models/user');
+const UserModel = require('../models/user');
+
+const response = require('../db/response');
 
 module.exports.signup = function (req, res) {
     // Devuelve un Error si no encuentra un 'user' en la request
-    if (!req.body.user) return res.status(200).send({sucess: false, error: 'user info not found'});
+    if (!req.body.user) return response.error(req, res, 'product info not found', 200);
 
     try {
-        User.signup(req.body.user)
+        UserModel.signup(req.body.user)
             .then(() => {
                 // Envia un response de que se creo el usuario correctamente
-                res.status(200).send({sucess: true, error: 'user created succesfully'});
+                response.success(req, res, 'user created succesfully');
                 // Si no envia una response del porque no se creo el usuario
-            }).catch(error => res.status(200).send({sucess: false, error: error.message}))
+            }).catch(error => response.error(req, res, error.message, 200))
     } catch (error) {
         // Si no puede ejecutar la funcion envia una response con el error
-        res.status(500).send({sucess: false, error: error.message})
+        response.error(req, res, error.message);
     }
 }
