@@ -13,6 +13,11 @@ const Titles =[{heading: 'Id Employee'},{heading: 'Employee Name'},{heading: 'Ta
 export function Employees(){
     const [State, changeState] = useState(true);
 
+    const toggle = () => {
+        changeState(!State)
+
+    }
+
     return (
     <div className="Employees"> 
         <div className="Title">
@@ -21,17 +26,17 @@ export function Employees(){
             <div className="right">
                 <Filter data={Filters}/>
                 <Button className="Button" type="submit" Text ="Search"/>
-                <Button State={State} ChangeState={changeState} className="Button" Text ="Add Employee" onclick ={ () => changeState(!State)}/>
+                <Button State={State} ChangeState={changeState} className="Button" Text ="Add Employee" onClick ={ toggle}/>
                 {/* <button  className="Button" onclick ={() => changeState(!State)}>addemploye</button> */}
                     {/* // <Modal State = {modalState}  changeState= {changeState}>
                     //     <input type="submit" placeholder="Hola Mundo"/>
                     // </Modal>}/> */}
             </div>
         </div>
-        <Modal State = {State}  ChangeState= {changeState}>
+        <Modal State = {State}  ChangeState= {toggle}>
             <div>
 
-                <h1>{State}</h1>
+                {/* <h1>{State}</h1> */}
                 <input type="text" placeholder="Hola Mundo"/>
             </div>
         </Modal>
