@@ -63,7 +63,7 @@ module.exports.unRegister = function (req, res) {
     // Devuelve un Error si no encuentra un 'product' en la request
     if (!req.body.serial) return response.error(req, res, 'serial not found', 200);
     try {
-        ProductModel.unRegister(req.body.serial, ProductModel)
+        ProductModel.unRegister(req.body.serial)
         .then(() => {
             response.success(req, res, "Producto eliminado correctamente.");
         }).catch(error => response.error(req, res, error.message, 200));
