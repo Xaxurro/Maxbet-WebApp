@@ -40,11 +40,6 @@ const ProductSchema = mongoose.Schema(
     }],
 },)
 
-// Creacion del modelo 'product', que usa el Schema 'ProductSchema', y cuya colleccion es llamada 'products'
-// Se exporta como modulo a productController.js
-module.exports = ProductModel = mongoose.model('product', ProductSchema, 'products');
-
-
 // Metodos Estaticos
 ProductSchema.statics.register = function (productInfo) {
     // Si no existe el campo en el req.body, arrojara un Error
@@ -66,6 +61,14 @@ ProductSchema.statics.register = function (productInfo) {
                 origin: productInfo.origin,
                 history: []
             };
+            
+            for (const key in newProduct) {
+                console.log("newProduct[key]");
+                console.log(newProduct[key]);
+                if (Object.hasOwnProperty.call(newProduct, key) && key != "history" && newProduct[key] != undefined) {
+                    newProduct.history.push({change: "CREADO", comment: `${key}: ${newProduct[key]}`});
+                }
+            }
             
             // Busca el padre del objeto (si es que tiene), si lo encuentra lo agrega al doc, si no arroja un Error
             if (productInfo.parent) {
@@ -100,10 +103,11 @@ ProductSchema.statics.update = function (serial, productInfo) {
             history: product.history
         };
 
-        for (const key in productInfo) {
-            if (Object.hasOwnProperty.call(productInfo, key)) {
-                // const element = productInfo[key];
-                newProduct.history.push({change: "MODIFICADO", comment: `${key}: ${productInfo[key]}`});
+        for (const key in newProduct) {
+            console.log("newProduct[key]");
+            console.log(newProduct[key]);
+            if (Object.hasOwnProperty.call(newProduct, key) && key != "history" && newProduct[key] != undefined) {
+                newProduct.history.push({change: "MODIFICADO", comment: `${key}: ${newProduct[key]}`});
             }
         }
         
@@ -144,7 +148,7 @@ ProductSchema.statics.getOne = function (serial) {
 };
 
 ProductSchema.statics.getAll = function () {
-    // Busca los docs que pasen por el filtro de la funcion find (como no hay filtro los busca todos)
+    // Busca los docs que pasen por el filtro de la funcion find
     // Despues envia los datos
     return this.find();
 };
@@ -165,3 +169,8 @@ ProductSchema.statics.unRegister = function (serial) {
     // Elimina al padre
     return this.deleteOne({serial: serial});
 };
+
+
+// Creacion del modelo 'product', que usa el Schema 'ProductSchema', y cuya colleccion es llamada 'products'
+// Se exporta como modulo a productController.js
+module.exports = ProductModel = mongoose.model('product', ProductSchema, 'products');
