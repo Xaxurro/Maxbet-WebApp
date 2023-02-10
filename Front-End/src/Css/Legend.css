@@ -1,0 +1,18 @@
+.Legend{
+    border-radius: 17px;
+    background-color: #ffff;
+    display:flex;
+    font-size:110%;
+    align-items: center;
+    justify-content: center;
+    margin: 0% 10%;
+}
+span{
+    margin: 0% 4%;
+}
+ul{
+    width: 95%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
