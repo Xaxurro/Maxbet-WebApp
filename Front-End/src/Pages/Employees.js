@@ -12,7 +12,7 @@ const Filters = ["Id Employee","Employee Name","Task","Employee Status"]
 const Titles =[{heading: 'Id Employee'},{heading: 'Employee Name'},{heading: 'Task'},{heading: 'Employee Status'}];
 
 export function Employees(){
-    const [State, changeState] = useState(true);
+    const [State, changeState] = useState(false);
 
     const toggle = () => {
         changeState(!State)
