@@ -14,14 +14,16 @@ export function Inventory(){
     const [isModalActive, setModalState] = useState(false);
     const [items, setItems] = useState([]);
 
-    
+    useEffect(() => {
+        
+    });
 
     const toggle = () => {
         setModalState(!isModalActive)
     }
 
     const getItems = () => {
-        setItems(fetch('http://localhost:5000/product/', {
+        fetch('http://localhost:5000/product/', {
             method: 'GET',
         })
         .then(response => response.json())
@@ -30,10 +32,11 @@ export function Inventory(){
             return [];
         })
         .then(data => {
-            console.log("data JSON");
-            console.log(data);
+            setItems(data);
+            console.log("ITEMS GetItems");
+            console.log(items);
             return data;
-        }));
+        });
     }
 
 
@@ -45,7 +48,7 @@ export function Inventory(){
             <h1><i>Inventory</i></h1>
             <div className="right">
                 <Filter data={Filters}/>
-                <Button className="Button" type="submit" Text ="Search" onClick={getItems}/>
+                <Button className="Button" Text ="Search" onClick={getItems}/>
                 <Button className="Button" Text ="Add Item" onClick ={toggle}/>
             </div>
         </div>
