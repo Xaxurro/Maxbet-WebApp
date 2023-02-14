@@ -10,6 +10,11 @@ const ProductSchema = mongoose.Schema(
         uppercase: true,
         unique: true,
     },
+    name: {
+        type: String,
+        required: true,
+        uppercase: true,
+    },
     state: {
         type: String,
         required: true,
@@ -19,6 +24,7 @@ const ProductSchema = mongoose.Schema(
         required: true,
         trim: true,
     },
+    owner: String,
     parent: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'products',
@@ -43,28 +49,29 @@ const ProductSchema = mongoose.Schema(
 // Metodos Estaticos
 ProductSchema.statics.register = function (productInfo) {
     // Si no existe el campo en el req.body, arrojara un Error
+    if(!productInfo.name) throw new Error('name is required');
     if(!productInfo.serial) throw new Error('serial is required');
     if(!productInfo.state) throw new Error('state is required');
+    if(!productInfo.owner) throw new Error('owner is required');
     if(!productInfo.origin) throw new Error('origin is required');
 
     const model = this;
 
-    return this.findOne({serial: productInfo.serial})
-        .then(async (product) => {
+    return this.findOne({serial: productInfo.serial}).then(async (product) => {
             // Si encuentra un producto con el mismo serial arroja un Error
             if(product) throw new Error('product already exists');
             
             // Crea el documento
             const newProduct = {
                 serial: productInfo.serial,
+                name: productInfo.name,
                 state: productInfo.state,
                 origin: productInfo.origin,
+                owner: productInfo.owner,
                 history: []
             };
             
             for (const key in newProduct) {
-                console.log("newProduct[key]");
-                console.log(newProduct[key]);
                 if (Object.hasOwnProperty.call(newProduct, key) && key != "history" && newProduct[key] != undefined) {
                     newProduct.history.push({change: "CREADO", comment: `${key}: ${newProduct[key]}`});
                 }
@@ -72,9 +79,10 @@ ProductSchema.statics.register = function (productInfo) {
             
             // Busca el padre del objeto (si es que tiene), si lo encuentra lo agrega al doc, si no arroja un Error
             if (productInfo.parent) {
-                const parentProduct = await model.findOne({serial: productInfo.parent}).then(parent => parent);
-                if (!parentProduct) throw new Error("Parent doesn't exists");
-                newProduct["parent"] = parentProduct._id;
+                model.findOne({serial: productInfo.parent}).then(parent => {
+                    if (!parent) throw new Error("Parent doesn't exists");
+                    newProduct["parent"] = parent._id;
+                });
             }
 
             // Envia el doc a la DB
@@ -98,14 +106,14 @@ ProductSchema.statics.update = function (serial, productInfo) {
         // Crea el documento
         const newProduct = {
             serial: productInfo.serial,
+            name: productInfo.name,
             state: productInfo.state,
             origin: productInfo.origin,
+            owner: productInfo.owner,
             history: product.history
         };
 
         for (const key in newProduct) {
-            console.log("newProduct[key]");
-            console.log(newProduct[key]);
             if (Object.hasOwnProperty.call(newProduct, key) && key != "history" && newProduct[key] != undefined) {
                 newProduct.history.push({change: "MODIFICADO", comment: `${key}: ${newProduct[key]}`});
             }

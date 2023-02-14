@@ -70,7 +70,6 @@ const UserSchema = mongoose.Schema({
                 
                 model.findOne().sort({_id:-1}).then(RESULT => {
                         let maxID;
-                        // [] === [] ?
                         if (RESULT === null) {
                             maxID = 0;
                         } else {
