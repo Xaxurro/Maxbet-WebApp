@@ -3,7 +3,7 @@ import { ButtonFile } from "../Components/ButtonFile"
 import { Table } from "../Components/Table";
 import { Filter } from "../Components/Filter";
 import { Modal } from "../Components/Modal.js";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import "../Css/Modal.css"
 
@@ -11,20 +11,32 @@ import "../Css/Modal.css"
 const Filters = ["Item id","Item Name","Origin","Owner Name","Status"]
 const Titles =[{heading: 'Item id'},{heading: 'Item Name'},{heading: 'Origin'},{heading: 'Owner Name'},{heading: 'Status'}];
 export function Inventory(){
-    const [State, changeState] = useState(false);
+    const [isModalActive, setModalState] = useState(false);
+    const [items, setItems] = useState([]);
+
+    
 
     const toggle = () => {
-        changeState(!State)
+        setModalState(!isModalActive)
     }
 
     const getItems = () => {
-        console.log("HOLAAAA");
-        fetch('http://localhost:5000/product/', {
+        setItems(fetch('http://localhost:5000/product/', {
             method: 'GET',
         })
         .then(response => response.json())
-        .then(data => console.log(data));
+        .then(json => {
+            if (json.success) return json.data;
+            return [];
+        })
+        .then(data => {
+            console.log("data JSON");
+            console.log(data);
+            return data;
+        }));
     }
+
+
 
     return (
     <div className="Employees"> 
@@ -37,7 +49,7 @@ export function Inventory(){
                 <Button className="Button" Text ="Add Item" onClick ={toggle}/>
             </div>
         </div>
-        <Modal State = {State}  ChangeState= {toggle} Tittle = "Add Item">
+        <Modal State = {isModalActive} ChangeState = {toggle} Title = "Add Item">
             <div className="ModalBody">
                 <div className="ModalRight">
                     <label for="IName">Item Name:</label><br/>
@@ -71,7 +83,7 @@ export function Inventory(){
                 <Button className='Button' Text='Cancel' onClick={toggle}></Button>
             </div>
         </Modal>
-        <Table column={Titles}/>
+        <Table data={items} column={Titles}/>
         
         
     </div>);

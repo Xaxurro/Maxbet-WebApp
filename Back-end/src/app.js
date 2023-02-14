@@ -1,5 +1,6 @@
 // Se encarga de las rutas
 const express = require('express');
+const cors = require('cors');
 // Permite manejar las request y responses
 const bodyParser = require('body-parser');
 const _connect = require('./db/_connect');
@@ -13,6 +14,8 @@ _connect();
 
 const app = express();
 
+//Permitir dominio
+app.use(cors({origin: ['http://localhost:3000']}));
 app.use(bodyParser.json());
 
 app.use('/account', userRoutes);
