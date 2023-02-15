@@ -9,7 +9,7 @@ import "../Css/Modal.css"
 
 
 const Filters = ["Item id","Item Name","Origin","Owner Name","Status"]
-const Titles =[{heading: 'Item id'},{heading: 'Item Name'},{heading: 'Origin'},{heading: 'Owner Name'},{heading: 'Status'}];
+const Titles =[ {heading: 'Serial', value:"serial"},{heading: 'Item Name', value:"name"},{heading: 'Origin' , value:"origin"},{heading: 'Owner Name' , value:"owner"},{heading: 'Status' , value:"state"}];
 export function Inventory(){
     const [isModalActive, setModalState] = useState(false);
     const [items, setItems] = useState([]);

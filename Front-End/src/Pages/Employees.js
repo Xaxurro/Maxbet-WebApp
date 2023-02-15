@@ -10,7 +10,7 @@ import "../Css/Employees.css"
 
 const Filters = ["Id Employee","Employee Name","Task","Employee Status"]
 const Titles =[{heading: 'Id Employee'},{heading: 'Employee Name'},{heading: 'Task'},{heading: 'Employee Status'}];
-
+const aux = 0;
 export function Employees(){
     const [State, changeState] = useState(false);
 
@@ -70,7 +70,7 @@ export function Employees(){
         </Modal>
         
         <Legend/>
-        <Table column={Titles}/>
+        <Table data={aux}column={Titles}/>
         
     </div>
     );
