@@ -3,7 +3,7 @@ import { ButtonFile } from "../Components/ButtonFile"
 import { Table } from "../Components/Table";
 import { Filter } from "../Components/Filter";
 import { Modal } from "../Components/Modal.js";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import "../Css/Modal.css"
 
@@ -14,9 +14,10 @@ export function Inventory(){
     const [isModalActive, setModalState] = useState(false);
     const [items, setItems] = useState([]);
 
-    useEffect(() => {
-        
-    });
+    const [IName, setIName] = useState("");
+    const [ISerial, setISerial] = useState("");
+    const [IOrigin, setIOrigin] = useState("");
+    const [IOwner, setIOwner] = useState("");
 
     const toggle = () => {
         setModalState(!isModalActive)
@@ -33,13 +34,39 @@ export function Inventory(){
         })
         .then(data => {
             setItems(data);
-            console.log("ITEMS GetItems");
-            console.log(items);
             return data;
         });
     }
 
+    const save = () => {
+        const data = JSON.stringify({
+            product: {
+                name: IName,
+                serial: ISerial,
+                state: "Recibido",
+                origin: IOrigin,
+                owner: IOwner,
+            }
+        });
 
+        fetch('http://localhost:5000/product/', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: data
+        })
+        .then(() => getItems())
+        .then(() => toggle());
+    }
+
+    const getName = e => {setIName(e.target.value)}
+    const getSerial = e => {setISerial(e.target.value)}
+    const getOrigin = e => {setIOrigin(e.target.value)}
+    const getOwner = e => {setIOwner(e.target.value)}
+
+    getItems();
 
     return (
     <div className="Employees"> 
@@ -48,7 +75,7 @@ export function Inventory(){
             <h1><i>Inventory</i></h1>
             <div className="right">
                 <Filter data={Filters}/>
-                <Button className="Button" Text ="Search" onClick={getItems}/>
+                <Button className="Button" Text ="Search" onClick ={getItems}/>
                 <Button className="Button" Text ="Add Item" onClick ={toggle}/>
             </div>
         </div>
@@ -56,19 +83,16 @@ export function Inventory(){
             <div className="ModalBody">
                 <div className="ModalRight">
                     <label for="IName">Item Name:</label><br/>
-                    <input id="IName"type="text"/><br/>
+                    <input id="IName" type="text" onChange={getName}/><br/>
 
-                    <label for="IRut">Item Rut:</label><br/>
-                    <input id="IRut"type="text"/><br/>
+                    <label for="ISerial">Item Serial:</label><br/>
+                    <input id="ISerial" type="text" onChange={getSerial}/><br/>
 
-                    <label for="IMail">Item Mail:</label><br/>
-                    <input id="IMail"type="text"/><br/>
+                    <label for="IOrigin">Item Origin:</label><br/>
+                    <input id="IOrigin" type="text" onChange={getOrigin}/><br/>
 
-                    <label for="IDirection">Item Direcction:</label><br/>
-                    <input id="IDirection"type="text"/><br/>
-
-                    <label for="IPhone">Item Phone:</label><br/>
-                    <input id="IPhone"type="text"/><br/>
+                    <label for="IOwner">Item Owner:</label><br/>
+                    <input id="IOwner" type="text" onChange={getOwner}/><br/>
                 </div>
 
 
@@ -82,7 +106,7 @@ export function Inventory(){
                 <br/>
                 <br/>
                 <br/>
-                <Button className='Button' Text='Add Item'></Button>
+                <Button className='Button' Text='Add Item' onClick={save}></Button>
                 <Button className='Button' Text='Cancel' onClick={toggle}></Button>
             </div>
         </Modal>

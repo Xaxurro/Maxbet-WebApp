@@ -26,8 +26,25 @@ import "../Css/Table.css"
 //     }
 // ]
 
+const deleteItem = serial => {
+    console.log("DELETE ITEM");
+
+    const item = JSON.stringify({
+        serial: serial
+    });
+
+    console.log(item);
+
+    fetch('http://localhost:5000/product/', {
+        method: 'DELETE',
+        body: item
+    })
+    .then(res => res.text())
+    .then(json => console.log(json));
+}
+
 const Table = ({data, column}) => {
-    console.log("data TABLE");
+    // console.log("data TABLE");
     return (
         <table>
             <thead className="TableHead">
@@ -35,7 +52,9 @@ const Table = ({data, column}) => {
             </thead>
             <tbody>
                 
-                    {data.map((items, index) => <TableRow item={items} column = {column}/>)}
+                    {data.map((items, index) => 
+                        <TableRow item={items} column = {column}/>
+                    )}
                     
             </tbody>
         </table>
@@ -47,18 +66,14 @@ const TableHeadItem = ({item}) => <th>{item.heading}</th>
 const TableRow = ({item,column}) => 
     // console.log(item['serial']);
     // console.log(item);
-    <tr>
-        {/* {console.log("column")} */}
-        {/* {console.log(column)} */}
-        {column.map((columnItem , index) => {
-            console.log("columnitem")
-            console.log(columnItem);
-            console.log("columnitem.value")
-            console.log(item[columnItem.value]);
-
-            return (<td>{item[`${columnItem.value}`]}</td>)
+    (
+        <><tr>
+        {column.map((columnItem, index) => {
+            return (<td>{item[`${columnItem.value}`]}</td>);
+            console.log(item[`serial`]);
         })}
-    </tr>
-
+        <button Text='DELETE ITEM' onClick={deleteItem(item[`serial`])} />
+        </tr></>
+    )
 
 export {Table};
