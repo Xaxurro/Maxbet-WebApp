@@ -1,4 +1,5 @@
 import "../Css/Table.css"
+import { Button } from "./Button";
 
 // const tools =[{
 //     Icon:
@@ -26,24 +27,7 @@ import "../Css/Table.css"
 //     }
 // ]
 
-const deleteItem = serial => {
-    console.log("DELETE ITEM");
-
-    const item = JSON.stringify({
-        serial: serial
-    });
-
-    console.log(item);
-
-    fetch('http://localhost:5000/product/', {
-        method: 'DELETE',
-        body: item
-    })
-    .then(res => res.text())
-    .then(json => console.log(json));
-}
-
-const Table = ({data, column}) => {
+const Table = ({data, column, onClick}) => {
     // console.log("data TABLE");
     return (
         <table>
@@ -51,11 +35,18 @@ const Table = ({data, column}) => {
                 <tr>{column.map((item, index)=>(<TableHeadItem item={item}/>) )}</tr>
             </thead>
             <tbody>
-                
-                    {data.map((items, index) => 
-                        <TableRow item={items} column = {column}/>
-                    )}
-                    
+                {data.map((item, index) => 
+                    <><tr>
+                    {column.map((columnItem, index) => {
+                        // console.log(item[`serial`]);
+                        return (
+                            <td>{item[`${columnItem.value}`]}</td>
+                        );
+                    })}
+                    </tr>
+                    <Button className='Button' Text='Delete Item' onClick={() => onClick(item[`serial`])}/>
+                    </>
+                )}
             </tbody>
         </table>
     );
@@ -63,17 +54,5 @@ const Table = ({data, column}) => {
 
 const TableHeadItem = ({item}) => <th>{item.heading}</th>
 // const TableRow = ({item,column}) => <td>{column.map((columnItem , index) => {item[`${columnItem.value}`]})}</td>
-const TableRow = ({item,column}) => 
-    // console.log(item['serial']);
-    // console.log(item);
-    (
-        <><tr>
-        {column.map((columnItem, index) => {
-            return (<td>{item[`${columnItem.value}`]}</td>);
-            console.log(item[`serial`]);
-        })}
-        <button Text='DELETE ITEM' onClick={deleteItem(item[`serial`])} />
-        </tr></>
-    )
 
 export {Table};

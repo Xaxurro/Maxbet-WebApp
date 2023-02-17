@@ -57,8 +57,24 @@ export function Inventory(){
             },
             body: data
         })
-        .then(() => getItems())
         .then(() => toggle());
+    }
+
+    const deleteItem = serial => {
+        const item = JSON.stringify({
+            serial: serial
+        });
+    
+        fetch('http://localhost:5000/product/', {
+            headers:{          
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },          
+            method: 'DELETE',
+            body: item
+        })
+        .then(res => res.text())
+        .then(json => console.log(json))
     }
 
     const getName = e => {setIName(e.target.value)}
@@ -110,7 +126,7 @@ export function Inventory(){
                 <Button className='Button' Text='Cancel' onClick={toggle}></Button>
             </div>
         </Modal>
-        <Table data={items} column={Titles}/>
+        <Table data={items} column={Titles} onClick={deleteItem}/>
         
         
     </div>);
