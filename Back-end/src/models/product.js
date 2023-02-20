@@ -71,6 +71,7 @@ ProductSchema.statics.register = function (productInfo) {
                 history: []
             };
             
+            // Agrega al historial del producto los datos iniciales
             for (const key in newProduct) {
                 if (Object.hasOwnProperty.call(newProduct, key) && key != "history" && newProduct[key] != undefined) {
                     newProduct.history.push({change: "CREADO", comment: `${key}: ${newProduct[key]}`});
@@ -113,6 +114,7 @@ ProductSchema.statics.update = function (serial, productInfo) {
             history: product.history
         };
 
+        // Agrega al historial del producto los cambios realizados
         for (const key in newProduct) {
             if (Object.hasOwnProperty.call(newProduct, key) && key != "history" && newProduct[key] != undefined) {
                 newProduct.history.push({change: "MODIFICADO", comment: `${key}: ${newProduct[key]}`});

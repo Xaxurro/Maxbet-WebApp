@@ -50,51 +50,95 @@ const EmployeeSchema = mongoose.Schema({
         trim: true,
         require: true
     },
-},
-// Metodos Estaticos
-{
-    statics:{
-        signup(employeeInfo) {
-            // Si no existe el campo en el req.body, arrojara un Error
-            if(!employeeInfo.email) throw new Error('email is invalid');
-            if(!employeeInfo.password) throw new Error('password is required');
-        
-            const model = this;
-            
-            // Busca un usuario con el mismo email
-            return this.findOne({email: employeeInfo.email})
-            .then(employee => {
-                // Si encuentra un usuario arroja un Error
-                if(employee) throw new Error('employee already exists');
-                // SELECT *
-                
-                model.findOne().sort({_id:-1}).then(RESULT => {
-                        let maxID;
-                        if (RESULT === null) {
-                            maxID = 0;
-                        } else {
-                            maxID = RESULT._id;
-                        }
-
-                        // Crea el documento
-                        const newemployee = {
-                            _id: maxID + 1,
-                            name: employeeInfo.name,
-                            email: employeeInfo.email,
-                            password: bcrypt.hashSync(employeeInfo.password, 9),
-                            direction: employeeInfo.direction,
-                            rut: employeeInfo.rut,
-                            phone: employeeInfo.phone,
-                        };
-                         
-                        // Lo encia a la DB
-                        return this.create(newemployee);
-                    });
-                })
-                .then(employeeCreated => employeeCreated)
-        }
-    }
 });
+
+
+// Metodos Estaticos
+EmployeeSchema.statics.signup = function (employeeInfo) {
+    // Si no existe el campo en el req.body, arrojara un Error
+    if(!employeeInfo.email) throw new Error('email is invalid');
+    if(!employeeInfo.password) throw new Error('password is required');
+    
+    const model = this;
+    
+    // Busca un usuario con el mismo email
+    return this.findOne({email: employeeInfo.email})
+    .then(employee => {
+        // Si encuentra un usuario arroja un Error
+        if(employee) throw new Error('employee already exists');
+        // SELECT *
+        
+        model.findOne().sort({_id:-1}).then(RESULT => {
+            let maxID;
+            if (RESULT === null) {
+                maxID = 0;
+            } else {
+                maxID = RESULT._id;
+            }
+            
+            // Crea el documento
+            const newemployee = {
+                _id: maxID + 1,
+                name: employeeInfo.name,
+                email: employeeInfo.email,
+                password: bcrypt.hashSync(employeeInfo.password, 9),
+                direction: employeeInfo.direction,
+                rut: employeeInfo.rut,
+                phone: employeeInfo.phone,
+            };
+            
+            // Lo encia a la DB
+            return this.create(newemployee);
+        });
+    })
+    .then(employeeCreated => employeeCreated);
+};
+
+EmployeeSchema.statics.update = function (id, employeeInfo) {
+    // Si no existe el campo en el req.body, arrojara un Error
+    if(!id) throw new Error('id is required');
+    
+    console.log(id);
+
+    const model = this;
+    
+    return this.findOne({_id: id})
+    .then(async employee => {
+        // Si encuentra un employee con el mismo id arroja un Error
+        if(!employee) throw new Error('employee doesnt exists');
+        
+        // Crea el documento
+        const newEmployee = {
+            name: employeeInfo.name,
+            email: employeeInfo.email,
+            password: employeeInfo.password,
+            direction: employeeInfo.direction,
+            rut: employeeInfo.rut,
+            phone: employeeInfo.phone
+        };
+        
+        // Envia el doc a la DB
+        return model.updateOne({_id:{$eq: id}}, newEmployee);
+    })
+    // Retorna el employeeo cerado
+    .then(employeeUpdated => employeeUpdated);
+};
+
+EmployeeSchema.statics.getAll = function () {
+    // Busca los docs que pasen por el filtro de la funcion find
+    // Despues envia los datos
+    return this.find();
+};
+
+EmployeeSchema.statics.deleteAccount = function (id) {
+    // Si no existe el id, arrojara un Error
+    if(!id) throw new Error('id is required');
+
+    const model = this;
+
+    // Elimina al padre
+    return this.deleteOne({_id: id});
+};
 
 // Creacion del modelo 'employee', que usa el Schema 'employeeSchema', y cuya colleccion es llamada 'employees'
 module.exports = EmployeeModel = mongoose.model('employee', EmployeeSchema, 'employees');

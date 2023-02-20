@@ -18,7 +18,7 @@ const app = express();
 app.use(cors({origin: ['http://localhost:3000']}));
 app.use(bodyParser.json());
 
-app.use('/account', employeeRoutes);
+app.use('/employee', employeeRoutes);
 app.use('/product', productRoutes);
 
 // Accede al puerto guardado en .env y se hacen las request ahi
