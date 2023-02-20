@@ -1,5 +1,5 @@
 import "../Css/Table.css"
-import { Button } from "./Button";
+
 
 // const tools =[{
 //     Icon:
@@ -27,8 +27,16 @@ import { Button } from "./Button";
 //     }
 // ]
 
+const getData = (items) => {
+    // console.log(typeof items);
+    for (const values in items) {
+        if (items.hasOwnProperty(values)) {
+           console.log(`${values}: ${items[values]}`);
+        }
+    }
+}
+
 const Table = ({data, column, onClick}) => {
-    // console.log("data TABLE");
     return (
         <table>
             <thead className="TableHead">
@@ -36,7 +44,7 @@ const Table = ({data, column, onClick}) => {
             </thead>
             <tbody>
                 {data.map((item, index) => 
-                    <><tr>
+                    <><tr onClick={() => getData(item)}>
                     {column.map((columnItem, index) => {
                         // console.log(item[`serial`]);
                         return (
@@ -44,7 +52,7 @@ const Table = ({data, column, onClick}) => {
                         );
                     })}
                     </tr>
-                    <Button className='Button' Text='Delete Item' onClick={() => onClick(item[`serial`])}/>
+                    {/* <Button className='Button' Text='Delete Item' onClick={() => onClick(item[`serial`])}/> */}
                     </>
                 )}
             </tbody>

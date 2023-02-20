@@ -10,14 +10,81 @@ import "../Css/Employees.css"
 
 const Filters = ["Id Employee","Employee Name","Task","Employee Status"]
 const Titles =[{heading: 'Id Employee'},{heading: 'Employee Name'},{heading: 'Task'},{heading: 'Employee Status'}];
-const aux = 0;
+// const aux = 0;
 export function Employees(){
     const [State, changeState] = useState(false);
+
+    const [Data, setEmployees] = useState([]);
+    // const [IName, setIName] = useState("");
+    // const [ISerial, setISerial] = useState("");
+    // const [IOrigin, setIOrigin] = useState("");
+    // const [IOwner, setIOwner] = useState("");
 
     const toggle = () => {
         changeState(!State)
 
     }
+
+    const getEmployees = () => {
+        fetch('http://localhost:5000/employee/', {
+            method: 'GET',
+        })
+        .then(response => response.json())
+        .then(json => {
+            if (json.success) return json.data;
+            return [];
+        })
+        .then(data => {
+            setEmployees(data);
+            return data;
+        });
+    }
+
+    // const save = () => {
+    //     const data = JSON.stringify({
+    //         product: {
+    //             name: IName,
+    //             serial: ISerial,
+    //             state: "Recibido",
+    //             origin: IOrigin,
+    //             owner: IOwner,
+    //         }
+    //     });
+
+    //     fetch('http://localhost:5000/product/', {
+    //         method: 'POST',
+    //         headers: {
+    //             'Accept': 'application/json',
+    //             'Content-Type': 'application/json',
+    //         },
+    //         body: data
+    //     })
+    //     .then(() => toggle());
+    // }
+
+    // const deleteItem = serial => {
+    //     const item = JSON.stringify({
+    //         serial: serial
+    //     });
+    
+    //     fetch('http://localhost:5000/product/', {
+    //         headers:{          
+    //             'Accept': 'application/json',
+    //             'Content-Type': 'application/json'
+    //         },          
+    //         method: 'DELETE',
+    //         body: item
+    //     })
+    //     .then(res => res.text())
+    //     .then(json => console.log(json))
+    // }
+
+    // const getName = e => {setIName(e.target.value)}
+    // const getSerial = e => {setISerial(e.target.value)}
+    // const getOrigin = e => {setIOrigin(e.target.value)}
+    // const getOwner = e => {setIOwner(e.target.value)}
+
+    getEmployees();
 
     return (
     <div className="Employees"> 
@@ -70,7 +137,7 @@ export function Employees(){
         </Modal>
         
         <Legend/>
-        <Table data={aux}column={Titles}/>
+        <Table data={Data}column={Titles}/>
         
     </div>
     );
