@@ -21,6 +21,7 @@ module.exports.signup = function (req, res) {
 
 module.exports.update = function (req, res) {
     // Devuelve un Error si no encuentra un 'employee' en la request
+    console.log(req.body);
     if (!req.body.employee) return response.error(req, res, 'employee info not found', 200);
 
     try {

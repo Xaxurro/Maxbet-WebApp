@@ -11,16 +11,31 @@ import "../Css/Modal.css"
 const Filters = ["Item id","Item Name","Origin","Owner Name","Status"]
 const Titles =[ {heading: 'Serial', value:"serial"},{heading: 'Item Name', value:"name"},{heading: 'Origin' , value:"origin"},{heading: 'Owner Name' , value:"owner"},{heading: 'Status' , value:"state"}];
 export function Inventory(){
-    const [isModalActive, setModalState] = useState(false);
+    const [isAddModalActive, setAddModalState] = useState(false);
+    const [isUpdateModalActive, setUpdateModalState] = useState(false);
     const [items, setItems] = useState([]);
 
+    const [OldSerial, setOldSerial] = useState("");
     const [IName, setIName] = useState("");
     const [ISerial, setISerial] = useState("");
     const [IOrigin, setIOrigin] = useState("");
     const [IOwner, setIOwner] = useState("");
 
-    const toggle = () => {
-        setModalState(!isModalActive)
+    const toggleAddModal = () => {
+        setAddModalState(!isAddModalActive);
+    }
+
+    const toggleUpdateModal = () => {
+        setUpdateModalState(!isUpdateModalActive);
+    }
+
+    const setUpdateModalData = (index) => {
+        setISerial(items[index].serial);
+        setIName(items[index].name);
+        setIOrigin(items[index].origin);
+        setIOwner(items[index].owner);
+        setOldSerial(items[index].serial);
+        toggleUpdateModal();
     }
 
     const getItems = () => {
@@ -57,7 +72,32 @@ export function Inventory(){
             },
             body: data
         })
-        .then(() => toggle());
+        .then(() => toggleAddModal());
+    }
+
+    const update = () => {
+        const data = JSON.stringify({
+            serial: OldSerial,
+            product: {
+                name: IName,
+                serial: ISerial,
+                state: "Recibido",
+                origin: IOrigin,
+                owner: IOwner,
+            }
+        });
+
+        console.log(data);
+
+        fetch('http://localhost:5000/product/', {
+            method: 'PATCH',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: data
+        })
+        .then(() => toggleUpdateModal());
     }
 
     const deleteItem = serial => {
@@ -73,8 +113,7 @@ export function Inventory(){
             method: 'DELETE',
             body: item
         })
-        .then(res => res.text())
-        .then(json => console.log(json))
+        .then(() => toggleUpdateModal());
     }
 
     const getName = e => {setIName(e.target.value)}
@@ -92,17 +131,49 @@ export function Inventory(){
             <div className="right">
                 <Filter data={Filters}/>
                 <Button className="Button" Text ="Search" onClick ={getItems}/>
-                <Button className="Button" Text ="Add Item" onClick ={toggle}/>
+                <Button className="Button" Text ="Add Item" onClick ={toggleAddModal}/>
             </div>
         </div>
-        <Modal State = {isModalActive} ChangeState = {toggle} Title = "Add Item">
+        <Modal State = {isUpdateModalActive} ChangeState = {toggleUpdateModal} Title = "Update Item">
             <div className="ModalBody">
                 <div className="ModalRight">
-                    <label for="IName">Item Name:</label><br/>
-                    <input id="IName" type="text" onChange={getName}/><br/>
+                    <label for="ISerial">Item Serial:</label><br/>
+                    <input id="ISerial" type="text" onChange={getSerial} value={ISerial}/><br/>
 
+                    <label for="IName">Item Name:</label><br/>
+                    <input id="IName" type="text" onChange={getName} value={IName}/><br/>
+
+                    <label for="IOrigin">Item Origin:</label><br/>
+                    <input id="IOrigin" type="text" onChange={getOrigin} value={IOrigin}/><br/>
+
+                    <label for="IOwner">Item Owner:</label><br/>
+                    <input id="IOwner" type="text" onChange={getOwner} value={IOwner}/><br/>
+                </div>
+
+
+                <div className="Left">
+                <label for="ChooseFile">
+                    <ButtonFile id="ChooseFile" className="ButtonFile" type="file" accept="image/png, image/jpg, image/gif, image/jpeg"/>
+                </label>
+                </div>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <Button className='Button' Text='Update Item' onClick={update}></Button>
+                <Button className='Button' Text='Delete Item' onClick={() => deleteItem(OldSerial)}/>
+                <Button className='Button' Text='Cancel' onClick={toggleUpdateModal}></Button>
+            </div>
+        </Modal>
+        <Modal State = {isAddModalActive} ChangeState = {toggleAddModal} Title = "Add Item">
+            <div className="ModalBody">
+                <div className="ModalRight">
                     <label for="ISerial">Item Serial:</label><br/>
                     <input id="ISerial" type="text" onChange={getSerial}/><br/>
+
+                    <label for="IName">Item Name:</label><br/>
+                    <input id="IName" type="text" onChange={getName}/><br/>
 
                     <label for="IOrigin">Item Origin:</label><br/>
                     <input id="IOrigin" type="text" onChange={getOrigin}/><br/>
@@ -123,10 +194,10 @@ export function Inventory(){
                 <br/>
                 <br/>
                 <Button className='Button' Text='Add Item' onClick={save}></Button>
-                <Button className='Button' Text='Cancel' onClick={toggle}></Button>
+                <Button className='Button' Text='Cancel' onClick={toggleAddModal}></Button>
             </div>
         </Modal>
-        <Table data={items} column={Titles} onClick={deleteItem}/>
+        <Table data={items} column={Titles} setModalData={setUpdateModalData}/>
         
         
     </div>);
