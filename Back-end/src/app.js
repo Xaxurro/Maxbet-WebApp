@@ -4,7 +4,7 @@ const cors = require('cors');
 // Permite manejar las request y responses
 const bodyParser = require('body-parser');
 const _connect = require('./db/_connect');
-const userRoutes = require('./routes/userRoutes');
+const employeeRoutes = require('./routes/employeeRoutes');
 const productRoutes = require('./routes/productRoutes');
 
 // Permite usar las variables con informacion sensible en .env
@@ -18,7 +18,7 @@ const app = express();
 app.use(cors({origin: ['http://localhost:3000']}));
 app.use(bodyParser.json());
 
-app.use('/account', userRoutes);
+app.use('/account', employeeRoutes);
 app.use('/product', productRoutes);
 
 // Accede al puerto guardado en .env y se hacen las request ahi

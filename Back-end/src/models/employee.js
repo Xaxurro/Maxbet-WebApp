@@ -6,7 +6,7 @@ const isValidRut = require('../helpers/isValidRut');
 
 // Estructura del documento inicial en Mongo, para más info:
 // https://mongoosejs.com/docs/schematypes.html
-const UserSchema = mongoose.Schema({
+const EmployeeSchema = mongoose.Schema({
     _id: Number,
     name: {
         type: String,
@@ -54,18 +54,18 @@ const UserSchema = mongoose.Schema({
 // Metodos Estaticos
 {
     statics:{
-        signup(userInfo) {
+        signup(employeeInfo) {
             // Si no existe el campo en el req.body, arrojara un Error
-            if(!userInfo.email) throw new Error('email is invalid');
-            if(!userInfo.password) throw new Error('password is required');
+            if(!employeeInfo.email) throw new Error('email is invalid');
+            if(!employeeInfo.password) throw new Error('password is required');
         
             const model = this;
             
             // Busca un usuario con el mismo email
-            return this.findOne({email: userInfo.email})
-            .then(user => {
+            return this.findOne({email: employeeInfo.email})
+            .then(employee => {
                 // Si encuentra un usuario arroja un Error
-                if(user) throw new Error('user already exists');
+                if(employee) throw new Error('employee already exists');
                 // SELECT *
                 
                 model.findOne().sort({_id:-1}).then(RESULT => {
@@ -77,24 +77,24 @@ const UserSchema = mongoose.Schema({
                         }
 
                         // Crea el documento
-                        const newUser = {
+                        const newemployee = {
                             _id: maxID + 1,
-                            name: userInfo.name,
-                            email: userInfo.email,
-                            password: bcrypt.hashSync(userInfo.password, 9),
-                            direction: userInfo.direction,
-                            rut: userInfo.rut,
-                            phone: userInfo.phone,
+                            name: employeeInfo.name,
+                            email: employeeInfo.email,
+                            password: bcrypt.hashSync(employeeInfo.password, 9),
+                            direction: employeeInfo.direction,
+                            rut: employeeInfo.rut,
+                            phone: employeeInfo.phone,
                         };
                          
                         // Lo encia a la DB
-                        return this.create(newUser);
+                        return this.create(newemployee);
                     });
                 })
-                .then(userCreated => userCreated)
+                .then(employeeCreated => employeeCreated)
         }
     }
 });
 
-// Creacion del modelo 'user', que usa el Schema 'UserSchema', y cuya colleccion es llamada 'users'
-module.exports = UserModel = mongoose.model('user', UserSchema, 'users');
+// Creacion del modelo 'employee', que usa el Schema 'employeeSchema', y cuya colleccion es llamada 'employees'
+module.exports = EmployeeModel = mongoose.model('employee', EmployeeSchema, 'employees');
