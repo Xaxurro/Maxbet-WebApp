@@ -1,6 +1,7 @@
 // import logo from "../Assets/NoEstamosListos.png"
 import "../Css/Navbar.css"
 import { Link, useMatch , useResolvedPath } from "react-router-dom";
+import { logout } from "../firebase";
 
 
 export function Navbar(){
@@ -14,6 +15,8 @@ export function Navbar(){
                     <CustomLink to="/Employees">Employees</CustomLink>
                     <CustomLink to="/Inventory">Inventory</CustomLink>
                     NombreAdmin
+                    <button onClick={logout}>Log out</button>
+                    
             </ul>
             </div>
         ); 
