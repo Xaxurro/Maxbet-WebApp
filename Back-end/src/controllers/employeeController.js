@@ -49,13 +49,13 @@ module.exports.getAll = function (req, res) {
 
 module.exports.deleteAccount = function (req, res) {
     // Devuelve un Error si no encuentra un 'employee' en la request
-    if (!req.body.employee) return response.error(req, res, 'employee info not found', 200);
+    if (!req.body.id) return response.error(req, res, 'employee id not found', 200);
 
     try {
-        EmployeeModel.deleteAccount(req.body.employee)
+        EmployeeModel.deleteAccount(req.body.id)
             .then(() => {
                 // Envia un response de que se creo el usuario correctamente
-                response.success(req, res, 'employee created succesfully');
+                response.success(req, res, 'employee deleted succesfully');
                 // Si no envia una response del porque no se creo el usuario
             }).catch(error => response.error(req, res, error.message, 200))
     } catch (error) {

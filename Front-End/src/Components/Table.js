@@ -27,13 +27,50 @@ import "../Css/Table.css"
 //     }
 // ]
 
-const getData = (items) => {
+const getData = (item) => {
     // console.log(typeof items);
-    for (const values in items) {
-        if (items.hasOwnProperty(values)) {
-           console.log(`${values}: ${items[values]}`);
-        }
-    }
+    // for (const values in items) {
+    //     if (items.hasOwnProperty(values)) {
+    //        console.log(`${values}: ${items[values]}`);
+    //     }
+    // }
+    console.log(item);
+}
+
+const setModalData = (data) => {
+    return(
+        <Modal State = {true} ChangeState = {toggle} Title = "Add Item">
+            <div className="ModalBody">
+                <div className="ModalRight">
+                    <label for="IName">Item Name:</label><br/>
+                    <input id="IName" type="text" onChange={getName}/><br/>
+
+                    <label for="ISerial">Item Serial:</label><br/>
+                    <input id="ISerial" type="text" onChange={getSerial}/><br/>
+
+                    <label for="IOrigin">Item Origin:</label><br/>
+                    <input id="IOrigin" type="text" onChange={getOrigin}/><br/>
+
+                    <label for="IOwner">Item Owner:</label><br/>
+                    <input id="IOwner" type="text" onChange={getOwner}/><br/>
+                </div>
+
+
+                <div className="Left">
+                <label for="ChooseFile">
+                    <ButtonFile id="ChooseFile" className="ButtonFile" type="file" accept="image/png, image/jpg, image/gif, image/jpeg"/>
+                </label>
+                </div>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <Button className='Button' Text='Add Item' onClick={save}></Button>
+                <Button className='Button' Text='Cancel' onClick={toggle}></Button>
+            </div>
+        </Modal>
+    );
 }
 
 const Table = ({data, column, onClick}) => {
