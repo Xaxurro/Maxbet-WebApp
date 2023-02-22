@@ -6,15 +6,37 @@
     margin: 0% 0% 0% 3%;
     padding: 0% 5%;
     cursor: pointer;
+    /* font-size: large; */
+    /* padding: 15px 50px; */
     /* align-self:center;
-    padding: 15px 50px;
     line-height: normal; */
     /* padding: 14px 40px ;
     display: inline-block; */
 }
+
 .Button:hover{
-    background-color: #000;
-    color:#fff;
+    background-color: #d47b0e;
+    /* color:#fff; */
+}
+.ButtonLogin{
+    background-color: #FF9617;
+    border: none;
+    border-radius: 61px;
+    font-family: 'Ubuntu',sans-serif;
+    margin: 0% 0% 0% 3%;
+    padding: 0% 5%;
+    cursor: pointer;
+    font-size: large;
+    padding: 15px 50px;
+    /* align-self:center;
+    line-height: normal; */
+    /* padding: 14px 40px ;
+    display: inline-block; */
+}
+
+.ButtonLogin:hover{
+    background-color: #d47b0e;
+    /* color:#fff; */
 }
 .Close{
     position: absolute;

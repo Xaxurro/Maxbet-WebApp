@@ -14,6 +14,7 @@ export function Navbar(){
                     <CustomLink to="/WorkList">WorkLists</CustomLink>
                     <CustomLink to="/Employees">Employees</CustomLink>
                     <CustomLink to="/Inventory">Inventory</CustomLink>
+                    <CustomLink to="/Delivered">Delivered</CustomLink>
                     NombreAdmin
                     <button onClick={logout}>Log out</button>
                     

@@ -3,18 +3,27 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import { auth, logInWithEmailAndPassword } from '../../firebase';
 import { useAuthState } from "react-firebase-hooks/auth";
 import styled from 'styled-components';
+import "../../Css/Login.css"
+import {Button} from "../../Components/Button.js"
+import "../../Css/Button.css"
 
 //////////////////////////////////////////////////////////////
 /**
  * Simplemente un div que centra el panel de login y un h1 de color negro
  */
 const ContenedorLogin = styled.div`
-    margin:auto;
-    width:50%;
+    
     border: 1px solid;
     padding:10px;
     text-Align: center;
     color: black;    
+    width: 50%;
+    height: 80%;
+
+    top: 50;
+    left: 50;
+    background-color:white;
+    position: relative;
 `
 const H1 = styled.h1`
     color: black;
@@ -62,42 +71,43 @@ const Login = () => {
 
     return (
         <>
-            <div>
-                <ContenedorLogin>
+            <div className='Overlay'>
+                <div className='LoginContainer'>
+                    
+                    <div className='ModalTitle'>
+                        
                     <H1> Maxbet login</H1>
+                    </div>
                     <form>
-                        <div>
-                            <label htmlFor="email-address">
-                                Email address
-                            </label>
-                            <span>   </span>
+                        <div className='ModalBody'>
+                            <br/>  
                             <input
                                 id="email-address"
                                 name="email"
                                 type="email"
+                                placeholder='Email'
                                 required
                                 onChange={(e) => setEmail(e.target.value)}
                             />
-                        </div>
+                   
 
-                        <div>
-                            <label htmlFor="password">
-                                Password
-                            </label>
-                            <span>   </span>
+                      
+                            <br/>  
                             <input
                                 id="password"
                                 name="password"
                                 type="password"
+                                placeholder='Password'
                                 required
                                 onChange={(e) => setPassword(e.target.value)}
-                            />
-                        </div>
+                                />
+                        
 
-                        <div>
-                            <button onClick={onLogin}>
-                                Login
-                            </button>
+                                <br/>  
+                   
+                            <Button className="LoginButton" Text="Log in!" onClick={onLogin}/>
+                                
+                           
                         </div>
                     </form>
                     <p>
@@ -106,7 +116,7 @@ const Login = () => {
                             Sign up
                         </NavLink>
                     </p>
-                </ContenedorLogin>
+                </div>
 
             </div>
         </>

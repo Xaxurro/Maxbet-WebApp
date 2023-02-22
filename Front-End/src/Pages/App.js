@@ -6,6 +6,7 @@ import { WorkLists } from "./WorkList";
 import { DashBoard } from "./DashBoard";
 import { Employees } from "./Employees";
 import { Inventory } from "./Inventory";
+
 import styled from "styled-components";
 import Login from './Login/Login';
 import Signup from './Login/Signup';
@@ -14,6 +15,7 @@ import { useState, useEffect } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { ProtectedRoute } from '../Components/ProtectedRoute';
 import { SpecialRoute } from '../Components//SpecialRoute';
+import Delivered from './Delivered';
 /////////////////////////////////////
 /**
  * Componentes de estilo
@@ -67,6 +69,9 @@ function App() {
           </Route>
           <Route element={<ProtectedRoute/>}>
             <Route path='/Employees' element={<Employees/>}/>
+          </Route>
+          <Route element={<ProtectedRoute/>}>
+            <Route path='/Delivered' element={<Delivered/>}/>
           </Route>
           
           <Route element={<SpecialRoute/>}>
