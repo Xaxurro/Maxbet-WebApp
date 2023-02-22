@@ -9,8 +9,7 @@ import { ButtonFile } from "../Components/ButtonFile";
 import "../Css/Employees.css"
 
 const Filters = ["Id Employee","Employee Name","Task","Employee Status"]
-const Titles =[{heading: 'Id Employee'},{heading: 'Employee Name'},{heading: 'Task'},{heading: 'Employee Status'}];
-// const aux = 0;
+const Titles =[{heading: 'Id Employee', value: "_id"},{heading: 'Employee Name', value: "name"},{heading: 'Task', value: "task"},{heading: 'Employee Status', value: "status"}];
 export function Employees(){
     const [State, changeState] = useState(false);
 
@@ -22,7 +21,6 @@ export function Employees(){
 
     const toggle = () => {
         changeState(!State)
-
     }
 
     const getEmployees = () => {

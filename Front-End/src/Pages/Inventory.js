@@ -53,7 +53,7 @@ export function Inventory(){
         });
     }
 
-    const save = () => {
+    const saveOne = () => {
         const data = JSON.stringify({
             product: {
                 name: IName,
@@ -73,6 +73,28 @@ export function Inventory(){
             body: data
         })
         .then(() => toggleAddModal());
+    }
+
+    const saveMore = () => {
+        const data = JSON.stringify({
+            product: {
+                name: IName,
+                serial: ISerial,
+                state: "Recibido",
+                origin: IOrigin,
+                owner: IOwner,
+            }
+        });
+
+        fetch('http://localhost:5000/product/', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: data
+        })
+        .then(setISerial(""));
     }
 
     const update = () => {
@@ -193,7 +215,8 @@ export function Inventory(){
                 <br/>
                 <br/>
                 <br/>
-                <Button className='Button' Text='Add Item' onClick={save}></Button>
+                <Button className='Button' Text='Add OtherItem' onClick={saveMore}></Button>
+                <Button className='Button' Text='Add Item' onClick={saveOne}></Button>
                 <Button className='Button' Text='Cancel' onClick={toggleAddModal}></Button>
             </div>
         </Modal>

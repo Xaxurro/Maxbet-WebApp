@@ -6,7 +6,7 @@ import { logout } from "../firebase";
 
 export function Navbar(){
     return( 
-            <div className="nav">
+        <div className="nav">
             {/* <img src={logo} alt="logo" height="px"/> */}
             <ul>
                     <CustomLink to="/" >logo</CustomLink>

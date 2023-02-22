@@ -5,7 +5,7 @@ export function Filter(props){
         <div className="Filter">
             <input type="text" placeholder="Filter"/>
             <select>
-                {props.data.map(opt => <option className = "Filter" value={opt}>{opt}</option>)}
+                {props.data.map(opt => <option key={opt} className = "Filter" value={opt}>{opt}</option>)}
             </select>
         </div>
         
