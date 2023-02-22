@@ -85,7 +85,8 @@ EmployeeSchema.statics.signup = function (employeeInfo) {
                 direction: employeeInfo.direction,
                 rut: employeeInfo.rut,
                 phone: employeeInfo.phone,
-                task: employeeInfo.task
+                task: employeeInfo.task,
+                status: employeeInfo.status
             };
             
             // Lo encia a la DB
@@ -116,7 +117,8 @@ EmployeeSchema.statics.update = function (id, employeeInfo) {
             direction: employeeInfo.direction,
             rut: employeeInfo.rut,
             phone: employeeInfo.phone,
-            task: employeeInfo.task
+            task: employeeInfo.task,
+            status: employeeInfo.status
         };
         
         // Envia el doc a la DB
