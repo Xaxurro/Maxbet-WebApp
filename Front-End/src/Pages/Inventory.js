@@ -160,7 +160,7 @@ export function Inventory() {
 
                     <div className="Left">
                         <label for="ChooseFile">
-                            <ButtonFile id="ChooseFile" className="ButtonFile" type="file" accept="image/png, image/jpg, image/gif, image/jpeg" />
+                            <ButtonFile id="ChooseFile" accept="image/png, image/jpg, image/gif, image/jpeg"/>
                         </label>
                     </div>
                     <br />
@@ -168,31 +168,24 @@ export function Inventory() {
                     <br />
                     <br />
                     <br />
-                    <Button className='Button' Text='Update Item' onClick={update}></Button>
-                    <Button className='Button' Text='Delete Item' onClick={() => deleteItem(OldSerial)} />
-                    <Button className='Button' Text='Cancel' onClick={toggleUpdateModal}></Button>
+                    <Button Text='Update Item' onClick={update}></Button>
+                    <Button Text='Delete Item' onClick={() => deleteItem(OldSerial)} />
+                    <Button Text='Cancel' onClick={toggleUpdateModal}></Button>
                 </div>
             </Modal>
             <Modal State={isAddModalActive} ChangeState={toggleAddModal} Title="Add Item">
                 <div className="ModalBody">
                     <div className="ModalRight">
-                        <label for="ISerial">Item Serial:</label><br />
-                        <input id="ISerial" type="text" onChange={getSerial} /><br />
-
-                        <label for="IName">Item Name:</label><br />
-                        <input id="IName" type="text" onChange={getName} /><br />
-
-                        <label for="IOrigin">Item Origin:</label><br />
-                        <input id="IOrigin" type="text" onChange={getOrigin} /><br />
-
-                        <label for="IOwner">Item Owner:</label><br />
-                        <input id="IOwner" type="text" onChange={getOwner} /><br />
+                        <TextInput id="ISerial" text="Item Serial" onChange={getSerial}/>
+                        <TextInput id="IName" text="Item Name" onChange={getName}/>
+                        <TextInput id="IOrigin" text="Item Origin" onChange={getOrigin}/>
+                        <TextInput id="IOwner" text="Item Owner" onChange={getOwner}/>
                     </div>
 
 
                     <div className="Left">
                         <label for="ChooseFile">
-                            <ButtonFile id="ChooseFile" className="ButtonFile" type="file" accept="image/png, image/jpg, image/gif, image/jpeg" />
+                            <ButtonFile id="ChooseFile" accept="image/png, image/jpg, image/gif, image/jpeg" />
                         </label>
                     </div>
                     <br />
@@ -200,9 +193,9 @@ export function Inventory() {
                     <br />
                     <br />
                     <br />
-                    <Button className='Button' Text='Add OtherItem' onClick={saveMore}></Button>
-                    <Button className='Button' Text='Add Item' onClick={saveOne}></Button>
-                    <Button className='Button' Text='Cancel' onClick={toggleAddModal}></Button>
+                    <Button Text='Add OtherItem' onClick={saveMore}></Button>
+                    <Button Text='Add Item' onClick={saveOne}></Button>
+                    <Button Text='Cancel' onClick={toggleAddModal}></Button>
                 </div>
             </Modal>
             <Table data={items} column={Titles} setModalData={setUpdateModalData} />

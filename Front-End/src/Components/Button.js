@@ -7,6 +7,6 @@ export function Button(props){
     // const [State, changeState] = useState(false);
 
     return(
-        <button type= {props.type} className={props.className} onClick={props.onClick} >{props.Text}</button>
+        <button type= {props.type} className='Button' onClick={props.onClick} >{props.Text}</button>
     );
 }
