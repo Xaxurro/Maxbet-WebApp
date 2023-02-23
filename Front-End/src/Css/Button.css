@@ -18,7 +18,7 @@
     background-color: #d47b0e;
     /* color:#fff; */
 }
-.ButtonLogin{
+.LoginButton{
     background-color: #FF9617;
     border: none;
     border-radius: 61px;
@@ -26,7 +26,7 @@
     margin: 0% 0% 0% 3%;
     padding: 0% 5%;
     cursor: pointer;
-    font-size: large;
+    /* font-size: large; */
     padding: 15px 50px;
     /* align-self:center;
     line-height: normal; */
@@ -34,7 +34,7 @@
     display: inline-block; */
 }
 
-.ButtonLogin:hover{
+.LoginButton:hover{
     background-color: #d47b0e;
     /* color:#fff; */
 }

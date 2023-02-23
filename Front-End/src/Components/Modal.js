@@ -5,7 +5,7 @@ const Modal = ({children, State, ChangeState, Tittle}) =>{
   return (
     <>
     {State &&
-    <div className="Overlay">
+    <div className="OverlayModal">
         
         <div className="ModalContainer">
           

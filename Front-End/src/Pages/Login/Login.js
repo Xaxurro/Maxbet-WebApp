@@ -71,7 +71,7 @@ const Login = () => {
 
     return (
         <>
-            <div className='Overlay'>
+            <div className='OverlayLogin'>
                 <div className='LoginContainer'>
                     
                     <div className='ModalTitle'>
