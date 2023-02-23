@@ -7,9 +7,13 @@ import { Modal } from "../Components/Modal";
 import { ButtonFile } from "../Components/ButtonFile";
 
 import "../Css/Employees.css"
+import { sendRequest } from "../Helpers/sendRequest";
 
 const Filters = ["Id Employee","Employee Name","Task","Employee Status"]
 const Titles =[{heading: 'Id Employee', value: "_id"},{heading: 'Employee Name', value: "name"},{heading: 'Task', value: "task"},{heading: 'Employee Status', value: "status"}];
+
+const URL = "http://localhost:5000/employee/";
+
 export function Employees(){
     const [State, changeState] = useState(false);
 
@@ -24,9 +28,7 @@ export function Employees(){
     }
 
     const getEmployees = () => {
-        fetch('http://localhost:5000/employee/', {
-            method: 'GET',
-        })
+        sendRequest(URL)
         .then(response => response.json())
         .then(json => {
             if (json.success) return json.data;

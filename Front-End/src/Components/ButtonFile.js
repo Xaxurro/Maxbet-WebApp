@@ -7,6 +7,9 @@ export function ButtonFile(props){
     // const [State, changeState] = useState(false);
 
     return(
-        <input className={props.className} type={props.type} accept={props.accept}>{props.Text}</input>
+        <>
+        <br/>
+        <input className="ButtonFile" type="file" accept={props.accept}>{props.Text}</input>
+        </>
     );
 }

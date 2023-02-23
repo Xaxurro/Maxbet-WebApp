@@ -2,8 +2,10 @@ import { Button } from "../Components/Button"
 import { ButtonFile } from "../Components/ButtonFile"
 import { Table } from "../Components/Table";
 import { Filter } from "../Components/Filter";
-import { Modal } from "../Components/Modal.js";
+import { Modal } from "../Components/Modal";
 import { useState, useEffect } from "react";
+import { TextInput } from "../Components/TextInput";
+import { sendRequest } from "../Helpers/sendRequest";
 
 import "../Css/Modal.css"
 
@@ -11,6 +13,7 @@ import "../Css/Modal.css"
 const Filters = ["Item id", "Item Name", "Origin", "Owner Name", "Status"]
 const Titles = [{ heading: 'Serial', value: "serial" }, { heading: 'Item Name', value: "name" }, { heading: 'Origin', value: "origin" }, { heading: 'Owner Name', value: "owner" }, { heading: 'Status', value: "state" }];
 const UPDATETIME = 60000;
+const URL = "http://localhost:5000/product/";
 
 export function Inventory() {
     const [isAddModalActive, setAddModalState] = useState(false);
@@ -42,9 +45,7 @@ export function Inventory() {
     }
 
     const getItems = () => {
-        fetch('http://localhost:5000/product/', {
-            method: 'GET',
-        })
+        sendRequest(URL)
             .then(response => response.json())
             .then(json => {
                 if (json.success) return json.data;
@@ -53,12 +54,11 @@ export function Inventory() {
             .then(data => {
                 console.log(data);
                 setItems([...data]);
-
             });
     }
 
     const saveOne = () => {
-        const data = JSON.stringify({
+        const data = {
             product: {
                 name: IName,
                 serial: ISerial,
@@ -66,21 +66,13 @@ export function Inventory() {
                 origin: IOrigin,
                 owner: IOwner,
             }
-        });
+        };
 
-        fetch('http://localhost:5000/product/', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: data
-        })
-            .then(() => toggleAddModal());
+        sendRequest(URL, data, 'POST').then(() => toggleAddModal());
     }
 
     const saveMore = () => {
-        const data = JSON.stringify({
+        const data = {
             product: {
                 name: IName,
                 serial: ISerial,
@@ -88,21 +80,13 @@ export function Inventory() {
                 origin: IOrigin,
                 owner: IOwner,
             }
-        });
+        };
 
-        fetch('http://localhost:5000/product/', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: data
-        })
-            .then(setISerial(""));
+        sendRequest(URL, data, 'POST').then(setISerial(""));
     }
 
     const update = () => {
-        const data = JSON.stringify({
+        const data = {
             serial: OldSerial,
             product: {
                 name: IName,
@@ -111,35 +95,17 @@ export function Inventory() {
                 origin: IOrigin,
                 owner: IOwner,
             }
-        });
+        };
 
-        console.log(data);
-
-        fetch('http://localhost:5000/product/', {
-            method: 'PATCH',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: data
-        })
-            .then(() => toggleUpdateModal());
+        sendRequest(URL, data, 'POST').then(() => toggleUpdateModal());
     }
 
     const deleteItem = serial => {
-        const item = JSON.stringify({
+        const item = {
             serial: serial
-        });
+        };
 
-        fetch('http://localhost:5000/product/', {
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            method: 'DELETE',
-            body: item
-        })
-            .then(() => toggleUpdateModal());
+        sendRequest(URL, item, 'DELETE').then(() => toggleUpdateModal());
     }
 
     const getName = e => { setIName(e.target.value) }
@@ -185,17 +151,10 @@ export function Inventory() {
             <Modal State={isUpdateModalActive} ChangeState={toggleUpdateModal} Title="Update Item">
                 <div className="ModalBody">
                     <div className="ModalRight">
-                        <label for="ISerial">Item Serial:</label><br />
-                        <input id="ISerial" type="text" onChange={getSerial} value={ISerial} /><br />
-
-                        <label for="IName">Item Name:</label><br />
-                        <input id="IName" type="text" onChange={getName} value={IName} /><br />
-
-                        <label for="IOrigin">Item Origin:</label><br />
-                        <input id="IOrigin" type="text" onChange={getOrigin} value={IOrigin} /><br />
-
-                        <label for="IOwner">Item Owner:</label><br />
-                        <input id="IOwner" type="text" onChange={getOwner} value={IOwner} /><br />
+                        <TextInput id="ISerial" text="Item Serial" onChange={getSerial} value={ISerial}/>
+                        <TextInput id="IName" text="Item Name" onChange={getName} value={IName}/>
+                        <TextInput id="IOrigin" text="Item Origin" onChange={getOrigin} value={IName}/>
+                        <TextInput id="IOwner" text="Item Owner" onChange={getOwner} value={IOwner}/>
                     </div>
 
 
