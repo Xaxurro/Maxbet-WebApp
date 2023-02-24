@@ -23,11 +23,11 @@ export function Employees(){
     const [Data, setEmployees] = useState([]);
 
     const [ID, setID] = useState("");
-    const [EName, setEName] = useState("");
     const [ERut, setERut] = useState("");
+    const [EName, setEName] = useState("");
     const [EMail, setEMail] = useState("");
-    const [EDirection, setEDirection] = useState("");
     const [EPhone, setEPhone] = useState("");
+    const [EDirection, setEDirection] = useState("");
 
     const toggleAddModal = () => {
         setAddModalState(!isAddModalActive);
@@ -38,6 +38,7 @@ export function Employees(){
     }
 
     const setUpdateModalData = (index) => {
+        setID(Data[index]._id);
         setEName(Data[index].name);
         setERut(Data[index].rut);
         setEMail(Data[index].email);
@@ -62,13 +63,15 @@ export function Employees(){
                 name: EName,
                 rut: ERut,
                 email: EMail,
+                password: EMail,
                 direction: EDirection,
                 phone: EPhone,
                 status: "idle"
             }
         };
 
-        sendRequest(URL, data, 'POST').then(() => toggleAddModal());
+        sendRequest(URL, data, 'POST').then(res => console.log(res.json()))
+        .then(() => toggleAddModal()).then(() => getEmployees());
     }
 
     const saveMore = () => {
@@ -77,13 +80,14 @@ export function Employees(){
                 name: EName,
                 rut: ERut,
                 email: EMail,
+                password: EMail,
                 direction: EDirection,
                 phone: EPhone,
                 status: "idle"
             }
         };
 
-        sendRequest(URL, data, 'POST');
+        sendRequest(URL, data, 'POST').then(() => getEmployees());
     }
 
     const update = () => {
@@ -99,15 +103,16 @@ export function Employees(){
             }
         };
 
-        sendRequest(URL, data, 'POST').then(() => toggleUpdateModal());
+        sendRequest(URL, data, 'POST').then(() => toggleUpdateModal()).then(() => getEmployees());
     }
 
     const deleteItem = ID => {
+        console.log(ID);
         const item = {
-            _id: ID
+            id: ID
         };
 
-        sendRequest(URL, item, 'DELETE').then(() => toggleUpdateModal());
+        sendRequest(URL, item, 'DELETE').then(() => toggleUpdateModal()).then(() => getEmployees());
     }
 
     const getName = e => { setEName(e.target.value) };
@@ -140,11 +145,11 @@ export function Employees(){
         <Modal State={isUpdateModalActive} ChangeState={toggleUpdateModal} Title="Update Employee">
             <div className="ModalBody">
                 <div className="ModalRight">
-                    <TextInput id="EName" text="Employee Name" onChange={getName}/>
-                    <TextInput id="ERut" text="Employee Rut" onChange={getRut}/>
-                    <TextInput id="EMail" text="Employee Mail" onChange={getMail}/>
-                    <TextInput id="EDirection" text="Employee Direction" onChange={getDirection}/>
-                    <TextInput id="EPhone" text="Employee Phone" onChange={getPhone}/>
+                    <TextInput id="EName" text="Employee Name" onChange={getName} value={EName}/>
+                    <TextInput id="ERut" text="Employee Rut" onChange={getRut} value={ERut}/>
+                    <TextInput id="EMail" text="Employee Mail" onChange={getMail} value={EMail}/>
+                    <TextInput id="EDirection" text="Employee Direction" onChange={getDirection} value={EDirection}/>
+                    <TextInput id="EPhone" text="Employee Phone" onChange={getPhone} value={EPhone}/>
                 </div>
 
 
