@@ -18,6 +18,7 @@ const UPDATETIME = 60000;
 
 export function Employees(){
     const [isAddModalActive, setAddModalState] = useState(false);
+    const [isModalActive, setModalState] = useState(false);
     const [isUpdateModalActive, setUpdateModalState] = useState(false);
     const [initDatos, setInitDatos] = useState(false);
     const [Data, setEmployees] = useState([]);
@@ -29,6 +30,10 @@ export function Employees(){
     const [EPhone, setEPhone] = useState("");
     const [EDirection, setEDirection] = useState("");
 
+
+    const toggleModal = () =>{
+        setModalState(!isModalActive);
+    }
     const toggleAddModal = () => {
         setAddModalState(!isAddModalActive);
     }
@@ -165,6 +170,7 @@ export function Employees(){
                 <br/>
                 <Button Text='Update Item' onClick={update}/>
                 <Button Text='Delete Item' onClick={() => deleteItem(ID)}/>
+                <Button Text='Delete Item' onClick={toggleModal}/>
                 <Button Text='Cancel' onClick={toggleUpdateModal}/>
             </div>
         </Modal>
@@ -194,6 +200,7 @@ export function Employees(){
                 <Button Text='Cancel' onClick={toggleAddModal}/>
             </div>
         </Modal>
+
         
         <Legend/>
         <Table data={Data} column={Titles} setModalData={setUpdateModalData}/>

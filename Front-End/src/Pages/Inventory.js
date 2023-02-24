@@ -17,6 +17,7 @@ const URL = "http://localhost:5000/product/";
 
 export function Inventory() {
     const [isAddModalActive, setAddModalState] = useState(false);
+    const [isModalActive, setModalState] = useState(false);
     const [isUpdateModalActive, setUpdateModalState] = useState(false);
     const [initDatos, setInitDatos] = useState(false);
     const [items, setItems] = useState([]);
@@ -27,6 +28,10 @@ export function Inventory() {
     const [IOrigin, setIOrigin] = useState("");
     const [IOwner, setIOwner] = useState("");
 
+
+    const toggleModal = () =>{
+        setModalState(!isModalActive);
+    }
     const toggleAddModal = () => {
         setAddModalState(!isAddModalActive);
     }
@@ -102,7 +107,7 @@ export function Inventory() {
             serial: serial
         };
 
-        sendRequest(URL, item, 'DELETE').then(() => toggleUpdateModal());
+        sendRequest(URL, item, 'DELETE').then(() =>toggleModal()).then(toggleUpdateModal());
     }
 
     const getName = e => { setIName(e.target.value) }
@@ -166,7 +171,12 @@ export function Inventory() {
                     <br />
                     <br />
                     <Button Text='Update Item' onClick={update}/>
-                    <Button Text='Delete Item' onClick={() => deleteItem(OldSerial)}/>
+                    <Button Text='Delete Item' onClick={toggleModal}/>
+                    <Modal State={isModalActive} ChangeState={toggleModal} Title="Confirm?">
+                        <Button Text='Delete Item' onClick={() => deleteItem(OldSerial)}/>
+                        <Button Text='Cancel' onClick={toggleModal}/>
+
+                    </Modal>
                     <Button Text='Cancel' onClick={toggleUpdateModal}/>
                 </div>
             </Modal>
