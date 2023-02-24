@@ -82,13 +82,13 @@ export function WorkLists(){
         <Modal State = {isModalActive} ChangeState = {toggle} Title = "Add WorkList">
             <div className="ModalBody">
                 <div className="ModalRight">
-                    <label for="IName">WorkList Name:</label><br/>
+                    <label htmlFor="IName">WorkList Name:</label><br/>
                     <input id="IName" type="text" onChange={getName}/><br/>
 
-                    <label for="IResponsible">WorkList Responsible:</label><br/>
+                    <label htmlFor="IResponsible">WorkList Responsible:</label><br/>
                     <input id="IResponsible" type="text" onChange={getResponsible}/><br/>
 
-                    <label for="IDeadline">WorkList Deadline:</label><br/>
+                    <label htmlFor="IDeadline">WorkList Deadline:</label><br/>
                     <input id="IDeadline" type="text" onChange={getDeadline}/><br/>
 
                     

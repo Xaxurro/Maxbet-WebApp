@@ -17,8 +17,8 @@ const URL = "http://localhost:5000/product/";
 
 export function Inventory() {
     const [isAddModalActive, setAddModalState] = useState(false);
-    const [initDatos, setInitDatos] = useState(false);
     const [isUpdateModalActive, setUpdateModalState] = useState(false);
+    const [initDatos, setInitDatos] = useState(false);
     const [items, setItems] = useState([]);
 
     const [OldSerial, setOldSerial] = useState("");
@@ -51,10 +51,7 @@ export function Inventory() {
                 if (json.success) return json.data;
                 return [];
             })
-            .then(data => {
-                console.log(data);
-                setItems([...data]);
-            });
+            .then(data => setItems([...data]));
     }
 
     const saveOne = () => {
@@ -159,7 +156,7 @@ export function Inventory() {
 
 
                     <div className="Left">
-                        <label for="ChooseFile">
+                        <label htmlFor="ChooseFile">
                             <ButtonFile id="ChooseFile" accept="image/png, image/jpg, image/gif, image/jpeg"/>
                         </label>
                     </div>
@@ -168,9 +165,9 @@ export function Inventory() {
                     <br />
                     <br />
                     <br />
-                    <Button Text='Update Item' onClick={update}></Button>
-                    <Button Text='Delete Item' onClick={() => deleteItem(OldSerial)} />
-                    <Button Text='Cancel' onClick={toggleUpdateModal}></Button>
+                    <Button Text='Update Item' onClick={update}/>
+                    <Button Text='Delete Item' onClick={() => deleteItem(OldSerial)}/>
+                    <Button Text='Cancel' onClick={toggleUpdateModal}/>
                 </div>
             </Modal>
             <Modal State={isAddModalActive} ChangeState={toggleAddModal} Title="Add Item">
@@ -184,7 +181,7 @@ export function Inventory() {
 
 
                     <div className="Left">
-                        <label for="ChooseFile">
+                        <label htmlFor="ChooseFile">
                             <ButtonFile id="ChooseFile" accept="image/png, image/jpg, image/gif, image/jpeg" />
                         </label>
                     </div>
@@ -193,13 +190,14 @@ export function Inventory() {
                     <br />
                     <br />
                     <br />
-                    <Button Text='Add OtherItem' onClick={saveMore}></Button>
-                    <Button Text='Add Item' onClick={saveOne}></Button>
-                    <Button Text='Cancel' onClick={toggleAddModal}></Button>
+                    <Button Text='Add OtherItem' onClick={saveMore}/>
+                    <Button Text='Add Item' onClick={saveOne}/>
+                    <Button Text='Cancel' onClick={toggleAddModal}/>
                 </div>
             </Modal>
             <Table data={items} column={Titles} setModalData={setUpdateModalData} />
 
 
-        </div>);
+        </div>
+    );
 }

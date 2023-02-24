@@ -3,10 +3,10 @@ import "../Css/Button.css"
 // import { useState } from "react";
 
 
-export function Button(props){
-    // const [State, changeState] = useState(false);
-
+const Button = ({className='Button', type, Text, onClick}) => {
     return(
-        <button type= {props.type} className='Button' onClick={props.onClick} >{props.Text}</button>
+        <button type={type} className={className} onClick={onClick} >{Text}</button>
     );
 }
+
+export {Button}

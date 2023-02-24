@@ -27,12 +27,12 @@ const Table = ({data, column, setModalData}) => {
     return (
         <table>
             <thead className="TableHead">
-                <tr>{column.map((item, index)=>(<TableHeadItem item={item}/>) )}</tr>
+                <tr key={"headers"}>{column.map((item, index)=>(<TableHeadItem item={item}/>) )}</tr>
             </thead>
-            <tbody>
+            <tbody key={"body"}>
                 {data.map((item, index) => 
-                    <><tr onClick={() => setModalData(index)}>
-                    {column.map((columnItem, index) => {
+                    <><tr key={index} onClick={() => setModalData(index)}>
+                    {column.map((columnItem, i) => {
                         if (columnItem.heading == 'Employee Status') return (<td>{Icons[item[`status`]]}</td>);
                         return (
                             <td>{item[`${columnItem.value}`]}</td>

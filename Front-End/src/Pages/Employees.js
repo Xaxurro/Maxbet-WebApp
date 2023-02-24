@@ -1,30 +1,49 @@
-import React,{ useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "../Components/Button"
 import { Legend } from "../Components/Legend"
 import { Table } from "../Components/Table";
 import { Filter } from "../Components/Filter";
 import { Modal } from "../Components/Modal";
 import { ButtonFile } from "../Components/ButtonFile";
+import { TextInput } from "../Components/TextInput";
 
 import "../Css/Employees.css"
 import { sendRequest } from "../Helpers/sendRequest";
 
 const Filters = ["Id Employee","Employee Name","Task","Employee Status"]
-const Titles =[{heading: 'Id Employee', value: "_id"},{heading: 'Employee Name', value: "name"},{heading: 'Task', value: "task"},{heading: 'Employee Status', value: "status"}];
+const Titles =[{heading: 'Id Employee', value: "_id"},{heading: 'Employee Name', value: "name"},{heading: 'Employee Status', value: "status"}];
 
 const URL = "http://localhost:5000/employee/";
+const UPDATETIME = 60000;
 
 export function Employees(){
-    const [State, changeState] = useState(false);
-
+    const [isAddModalActive, setAddModalState] = useState(false);
+    const [isUpdateModalActive, setUpdateModalState] = useState(false);
+    const [initDatos, setInitDatos] = useState(false);
     const [Data, setEmployees] = useState([]);
-    // const [IName, setIName] = useState("");
-    // const [ISerial, setISerial] = useState("");
-    // const [IOrigin, setIOrigin] = useState("");
-    // const [IOwner, setIOwner] = useState("");
 
-    const toggle = () => {
-        changeState(!State)
+    const [ID, setID] = useState("");
+    const [EName, setEName] = useState("");
+    const [ERut, setERut] = useState("");
+    const [EMail, setEMail] = useState("");
+    const [EDirection, setEDirection] = useState("");
+    const [EPhone, setEPhone] = useState("");
+
+    const toggleAddModal = () => {
+        setAddModalState(!isAddModalActive);
+    }
+
+    const toggleUpdateModal = () => {
+        setUpdateModalState(!isUpdateModalActive);
+    }
+
+    const setUpdateModalData = (index) => {
+        setEName(Data[index].name);
+        setERut(Data[index].rut);
+        setEMail(Data[index].email);
+        setEDirection(Data[index].direction);
+        setEPhone(Data[index].phone);
+        toggleUpdateModal();
     }
 
     const getEmployees = () => {
@@ -34,57 +53,78 @@ export function Employees(){
             if (json.success) return json.data;
             return [];
         })
-        .then(data => {
-            setEmployees(data);
-            return data;
-        });
+        .then(data => setEmployees([...data]));
     }
 
-    // const save = () => {
-    //     const data = JSON.stringify({
-    //         product: {
-    //             name: IName,
-    //             serial: ISerial,
-    //             state: "Recibido",
-    //             origin: IOrigin,
-    //             owner: IOwner,
-    //         }
-    //     });
+    const saveOne = () => {
+        const data = {
+            employee: {
+                name: EName,
+                rut: ERut,
+                email: EMail,
+                direction: EDirection,
+                phone: EPhone,
+                status: "idle"
+            }
+        };
 
-    //     fetch('http://localhost:5000/product/', {
-    //         method: 'POST',
-    //         headers: {
-    //             'Accept': 'application/json',
-    //             'Content-Type': 'application/json',
-    //         },
-    //         body: data
-    //     })
-    //     .then(() => toggle());
-    // }
+        sendRequest(URL, data, 'POST').then(() => toggleAddModal());
+    }
 
-    // const deleteItem = serial => {
-    //     const item = JSON.stringify({
-    //         serial: serial
-    //     });
-    
-    //     fetch('http://localhost:5000/product/', {
-    //         headers:{          
-    //             'Accept': 'application/json',
-    //             'Content-Type': 'application/json'
-    //         },          
-    //         method: 'DELETE',
-    //         body: item
-    //     })
-    //     .then(res => res.text())
-    //     .then(json => console.log(json))
-    // }
+    const saveMore = () => {
+        const data = {
+            employee: {
+                name: EName,
+                rut: ERut,
+                email: EMail,
+                direction: EDirection,
+                phone: EPhone,
+                status: "idle"
+            }
+        };
 
-    // const getName = e => {setIName(e.target.value)}
-    // const getSerial = e => {setISerial(e.target.value)}
-    // const getOrigin = e => {setIOrigin(e.target.value)}
-    // const getOwner = e => {setIOwner(e.target.value)}
+        sendRequest(URL, data, 'POST');
+    }
 
-    getEmployees();
+    const update = () => {
+        const data = {
+            _id: ID,
+            employee: {
+                name: EName,
+                rut: ERut,
+                email: EMail,
+                direction: EDirection,
+                phone: EPhone,
+                status: "idle"
+            }
+        };
+
+        sendRequest(URL, data, 'POST').then(() => toggleUpdateModal());
+    }
+
+    const deleteItem = ID => {
+        const item = {
+            _id: ID
+        };
+
+        sendRequest(URL, item, 'DELETE').then(() => toggleUpdateModal());
+    }
+
+    const getName = e => { setEName(e.target.value) };
+    const getRut = e => { setERut(e.target.value) };
+    const getMail = e => { setEMail(e.target.value) };
+    const getDirection = e => { setEDirection(e.target.value) };
+    const getPhone = e => { setEPhone(e.target.value) };
+
+    if (!initDatos) {
+        getEmployees();
+        setInitDatos(true)
+    }
+    useEffect(() => {
+        setInterval(() => {
+            getEmployees();
+        }, UPDATETIME);
+    }, []);
 
     return (
     <div className="Employees"> 
@@ -93,37 +133,24 @@ export function Employees(){
             <h1><i>Employees</i></h1>
             <div className="right">
                 <Filter data={Filters}/>
-                <Button className="Button" type="submit" Text ="Search"/>
-                <Button className="Button" Text ="Add Employee" onClick ={toggle}/>
-                {/* <button  className="Button" onclick ={() => changeState(!State)}>addemploye</button> */}
-                    {/* // <Modal State = {modalState}  changeState= {changeState}>
-                    //     <input type="submit" placeholder="Hola Mundo"/>
-                    // </Modal>}/> */}
+                <Button className="Button" Text="Search" onClick={getEmployees} />
+                <Button className="Button" Text="Add Employee" onClick={toggleAddModal} />
             </div>
         </div>
-        <Modal State = {State}  ChangeState= {toggle} Tittle = "Add Employee">
+        <Modal State={isUpdateModalActive} ChangeState={toggleUpdateModal} Title="Update Employee">
             <div className="ModalBody">
                 <div className="ModalRight">
-                    <label for="EName">Employee Name:</label>
-                    <input id="EName"type="text"/>
-
-                    <label for="ERut">Employee Rut:</label>
-                    <input id="ERut"type="text"/>
-
-                    <label for="EMail">Employee Mail:</label>
-                    <input id="EMail"type="text"/>
-
-                    <label for="EDirection">Employee Direcction:</label>
-                    <input id="EDirection"type="text"/>
-
-                    <label for="EPhone">Employee Phone:</label>
-                    <input id="EPhone"type="text"/>
+                    <TextInput id="EName" text="Employee Name" onChange={getName}/>
+                    <TextInput id="ERut" text="Employee Rut" onChange={getRut}/>
+                    <TextInput id="EMail" text="Employee Mail" onChange={getMail}/>
+                    <TextInput id="EDirection" text="Employee Direction" onChange={getDirection}/>
+                    <TextInput id="EPhone" text="Employee Phone" onChange={getPhone}/>
                 </div>
 
 
                 <div className="Left">
-                <label for="ChooseFile">
-                    <ButtonFile id="ChooseFile" className="ButtonFile" type="file" accept="image/png, image/jpg, image/gif, image/jpeg"/>
+                <label htmlFor="ChooseFile">
+                    <ButtonFile id="ChooseFile" accept="image/png, image/jpg, image/gif, image/jpeg" />
                 </label>
                 </div>
                 <br/>
@@ -131,13 +158,40 @@ export function Employees(){
                 <br/>
                 <br/>
                 <br/>
-                <Button className='Button' Text='Add Employee'></Button>
-                <Button className='Button' Text='Cancel' onClick={toggle}></Button>
+                <Button Text='Update Item' onClick={update}/>
+                <Button Text='Delete Item' onClick={() => deleteItem(ID)}/>
+                <Button Text='Cancel' onClick={toggleUpdateModal}/>
+            </div>
+        </Modal>
+        <Modal State={isAddModalActive} ChangeState={toggleAddModal} Title="Add Employee">
+            <div className="ModalBody">
+                <div className="ModalRight">
+                    <TextInput id="EName" text="Employee Name" onChange={getName}/>
+                    <TextInput id="ERut" text="Employee Rut" onChange={getRut}/>
+                    <TextInput id="EMail" text="Employee Mail" onChange={getMail}/>
+                    <TextInput id="EDirection" text="Employee Direction" onChange={getDirection}/>
+                    <TextInput id="EPhone" text="Employee Phone" onChange={getPhone}/>
+                </div>
+
+
+                <div className="Left">
+                <label htmlFor="ChooseFile">
+                    <ButtonFile id="ChooseFile" accept="image/png, image/jpg, image/gif, image/jpeg" />
+                </label>
+                </div>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <Button Text='Add Other Employee' onClick={saveMore}/>
+                <Button Text='Add Employee' onClick={saveOne}/>
+                <Button Text='Cancel' onClick={toggleAddModal}/>
             </div>
         </Modal>
         
         <Legend/>
-        <Table data={Data}column={Titles}/>
+        <Table data={Data} column={Titles} setModalData={setUpdateModalData}/>
         
     </div>
     );
