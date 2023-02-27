@@ -146,22 +146,20 @@ export function Inventory() {
 function handleSubmit(e) {
     // Prevent the browser from reloading the page
     e.preventDefault();
-
-
-
-
-    // const value = e.target.value;
     // Read the form data
     const form = e.target;
     const formData = new FormData(form);
-    // const formData = Object.fromEntries(new FormData(e.target).entries());
+
     // // You can pass formData as a fetch body directly:
 
     // // Or you can work with it as a plain object:
-    // const formJson = Object.fromEntries(formData.entries());
-    // console.log(formJson);
-    console.log(formData);
-  }
+    const formJson = Object.fromEntries(formData.entries());
+    // console.log(formData);
+    console.log(formJson);
+    console.log(formJson.IName);
+    Object.keys(formJson).map((values, i) => console.log(formJson[values]));
+    toggleSearchmodal()
+    }
 
     // console.log(items[1].name);
 
@@ -171,7 +169,7 @@ function handleSubmit(e) {
 
                 <h1><i>Inventory</i></h1>
                 <div className="right">
-                    {/* <Filter data={Filters} /> */}
+                    
                     <Button className="Button" text="Search" onClick={toggleSearchmodal} />
                     <Button className="Button" text="Add Item" onClick={toggleAddModal} />
                 </div>
@@ -182,10 +180,10 @@ function handleSubmit(e) {
                     
                 <TextInput id="ISerial" text="Item Serial" />
                     
-                {/* <TextInput id="IName" text="Item Name" />
+                <TextInput id="IName" text="Item Name" />
                 <TextInput id="IOrigin" text="Item Origin" />
-            <TextInput id="IOwner" text="Item Owner" /> */}
-                <Button text="submit" type="submit"/>
+                <TextInput id="IOwner" text="Item Owner" />
+                <Button text="submit" type="submit" onClick/>
                 </form>
 
                 
@@ -211,13 +209,13 @@ function handleSubmit(e) {
                     <br />
                     <br />
                     <br />
-                    <Button Text='Update Item' onClick={update}/>
-                    <Button Text='Delete Item' onClick={toggleConfirmDeleteModal}/>
+                    <Button text='Update Item' onClick={update}/>
+                    <Button text='Delete Item' onClick={toggleConfirmDeleteModal}/>
                     <Modal State={isConfirmDeleteModalActive} ChangeState={toggleConfirmDeleteModal} Title="Confirm?">
-                        <Button Text='Delete Item' onClick={() => deleteItem(OldSerial)}/>
-                        <Button Text='Cancel' onClick={toggleConfirmDeleteModal}/>
+                        <Button text='Delete Item' onClick={() => deleteItem(OldSerial)}/>
+                        <Button text='Cancel' onClick={toggleConfirmDeleteModal}/>
                     </Modal>
-                    <Button Text='Cancel' onClick={toggleUpdateModal}/>
+                    <Button text='Cancel' onClick={toggleUpdateModal}/>
                 </div>
             </Modal>
             <Modal State={isAddModalActive} ChangeState={toggleAddModal} Title="Add Item">
@@ -240,9 +238,9 @@ function handleSubmit(e) {
                     <br />
                     <br />
                     <br />
-                    <Button Text='Add OtherItem' onClick={saveMore}/>
-                    <Button Text='Add Item' onClick={saveOne}/>
-                    <Button Text='Cancel' onClick={toggleAddModal}/>
+                    <Button text='Add OtherItem' onClick={saveMore}/>
+                    <Button text='Add Item' onClick={saveOne}/>
+                    <Button text='Cancel' onClick={toggleAddModal}/>
                 </div>
             </Modal>
             <Table data={items} column={Titles} setModalData={setUpdateModalData} />
