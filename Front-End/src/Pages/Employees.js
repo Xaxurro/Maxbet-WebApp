@@ -106,13 +106,12 @@ export function Employees(){
                 email: EMail,
                 direction: EDirection,
                 phone: EPhone
-                // status: EStatus
             }
         };
-
+        
         sendRequest(URL, data, 'PATCH', getEmployees).then(() => toggleUpdateModal());
     }
-
+    
     const deleteItem = ID => {
         console.log(ID);
         const item = {
@@ -145,8 +144,8 @@ export function Employees(){
             <h1><i>Employees</i></h1>
             <div className="right">
                 <Filter data={Filters}/>
-                <Button className="Button" Text="Search" />
-                <Button className="Button" Text="Add Employee" onClick={toggleAddModal} />
+                <Button className="Button" text="Search" />
+                <Button className="Button" text="Add Employee" onClick={toggleAddModal} />
             </div>
         </div>
         <Modal State={isUpdateModalActive} ChangeState={toggleUpdateModal} Title="Update Employee">

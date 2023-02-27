@@ -1,7 +1,7 @@
 import { Button } from "../Components/Button"
 import { ButtonFile } from "../Components/ButtonFile"
 import { Table } from "../Components/Table";
-import { Filter } from "../Components/Filter";
+// import { Filter } from "../Components/Filter";
 import { Modal } from "../Components/Modal";
 import { useState, useEffect } from "react";
 import { TextInput } from "../Components/TextInput";
@@ -10,7 +10,7 @@ import { sendRequest } from "../Helpers/sendRequest";
 import "../Css/Modal.css"
 
 
-const Filters = ["Item id", "Item Name", "Origin", "Owner Name", "Status"]
+// const Filters = ["Item id", "Item Name", "Origin", "Owner Name", "Status"]
 const Titles = [{ heading: 'Serial', value: "serial" }, { heading: 'Item Name', value: "name" }, { heading: 'Origin', value: "origin" }, { heading: 'Owner Name', value: "owner" }, { heading: 'Status', value: "state" }];
 const UPDATETIME = 60000;
 const URL = "http://localhost:5000/product/";
@@ -19,6 +19,9 @@ export function Inventory() {
     const [isAddModalActive, setAddModalState] = useState(false);
     const [isConfirmDeleteModalActive, setConfirmDeleteModalState] = useState(false);
     const [isUpdateModalActive, setUpdateModalState] = useState(false);
+
+    const [isSearchModalActive, setSearchModalState] = useState(false);
+    
     const [initDatos, setInitDatos] = useState(false);
     const [items, setItems] = useState([]);
 
@@ -29,6 +32,9 @@ export function Inventory() {
     const [IOwner, setIOwner] = useState("");
 
 
+    const toggleSearchmodal = () =>{
+        setSearchModalState(!isSearchModalActive);
+    }
     const toggleConfirmDeleteModal = () =>{
         setConfirmDeleteModalState(!isConfirmDeleteModalActive);
     }
@@ -115,6 +121,7 @@ export function Inventory() {
     const getOrigin = e => { setIOrigin(e.target.value) }
     const getOwner = e => { setIOwner(e.target.value) }
 
+
     /**
      * En la linea 17 se crea un hook que mantiene el estado de la inicializacion de los datos,
      * que por defecto esta en false, esto es para que los datos se carguen inmediatamente al iniciar la app
@@ -136,8 +143,27 @@ export function Inventory() {
     }, []);
 
 
+function handleSubmit(e) {
+    // Prevent the browser from reloading the page
+    e.preventDefault();
 
 
+
+
+    // const value = e.target.value;
+    // Read the form data
+    const form = e.target;
+    const formData = new FormData(form);
+    // const formData = Object.fromEntries(new FormData(e.target).entries());
+    // // You can pass formData as a fetch body directly:
+
+    // // Or you can work with it as a plain object:
+    // const formJson = Object.fromEntries(formData.entries());
+    // console.log(formJson);
+    console.log(formData);
+  }
+
+    // console.log(items[1].name);
 
     return (
         <div className="Employees">
@@ -145,11 +171,26 @@ export function Inventory() {
 
                 <h1><i>Inventory</i></h1>
                 <div className="right">
-                    <Filter data={Filters} />
-                    <Button className="Button" Text="Search" onClick={getItems} />
-                    <Button className="Button" Text="Add Item" onClick={toggleAddModal} />
+                    {/* <Filter data={Filters} /> */}
+                    <Button className="Button" text="Search" onClick={toggleSearchmodal} />
+                    <Button className="Button" text="Add Item" onClick={toggleAddModal} />
                 </div>
             </div>
+            <Modal State={isSearchModalActive} ChangeState={toggleSearchmodal} Title="Search Modal">
+
+                <form method="post" onSubmit={handleSubmit}>
+                    
+                <TextInput id="ISerial" text="Item Serial" />
+                    
+                {/* <TextInput id="IName" text="Item Name" />
+                <TextInput id="IOrigin" text="Item Origin" />
+            <TextInput id="IOwner" text="Item Owner" /> */}
+                <Button text="submit" type="submit"/>
+                </form>
+
+                
+
+            </Modal>
             <Modal State={isUpdateModalActive} ChangeState={toggleUpdateModal} Title="Update Item">
                 <div className="ModalBody">
                     <div className="ModalRight">
