@@ -3,6 +3,7 @@ import { Button } from "../Components/Button"
 import { Legend } from "../Components/Legend"
 import { Table } from "../Components/Table";
 import { Filter } from "../Components/Filter";
+import { Form } from "../Components/Form";
 import { Modal } from "../Components/Modal";
 import { ButtonFile } from "../Components/ButtonFile";
 import { TextInput } from "../Components/TextInput";
@@ -104,8 +105,8 @@ export function Employees(){
                 rut: ERut,
                 email: EMail,
                 direction: EDirection,
-                phone: EPhone,
-                status: EStatus
+                phone: EPhone
+                // status: EStatus
             }
         };
 
@@ -150,33 +151,35 @@ export function Employees(){
         </div>
         <Modal State={isUpdateModalActive} ChangeState={toggleUpdateModal} Title="Update Employee">
             <div className="ModalBody">
-                <div className="ModalRight">
-                    <TextInput id="EName" text="Employee Name" onChange={getName} value={EName}/>
-                    <TextInput id="ERut" text="Employee Rut" onChange={getRut} value={ERut}/>
-                    <TextInput id="EMail" text="Employee Mail" onChange={getMail} value={EMail}/>
-                    <TextInput id="EDirection" text="Employee Direction" onChange={getDirection} value={EDirection}/>
-                    <TextInput id="EPhone" text="Employee Phone" onChange={getPhone} value={EPhone}/>
-                    <SelectionInput id="EStatus" text="Employee Status" values={States}/>
-                </div>
+                <Form URL={URL} method={"PATCH"}>
+                    <div className="ModalRight">
+                        <TextInput id="name" text="Employee Name" onChange={getName} value={EName}/>
+                        <TextInput id="rut" text="Employee Rut" onChange={getRut} value={ERut}/>
+                        <TextInput id="mail" text="Employee Mail" onChange={getMail} value={EMail}/>
+                        <TextInput id="direction" text="Employee Direction" onChange={getDirection} value={EDirection}/>
+                        <TextInput id="phone" text="Employee Phone" onChange={getPhone} value={EPhone}/>
+                        <SelectionInput id="status" text="Employee Status" values={States}/>
+                    </div>
 
 
-                <div className="Left">
-                <label htmlFor="ChooseFile">
-                    <ButtonFile id="ChooseFile" accept="image/png, image/jpg, image/gif, image/jpeg" />
-                </label>
-                </div>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <Button Text='Update Item' onClick={update}/>
-                <Button Text='Delete Item' onClick={toggleConfirmDeleteModal}/>
-                    <Modal State={isConfirmDeleteModalActive} ChangeState={toggleConfirmDeleteModal} Title="Confirm?">
-                        <Button Text='Delete Item' onClick={() => deleteItem(ID)}/>
-                        <Button Text='Cancel' onClick={toggleConfirmDeleteModal}/>
-                    </Modal>
-                <Button Text='Cancel' onClick={toggleUpdateModal}/>
+                    <div className="Left">
+                    <label htmlFor="ChooseFile">
+                        <ButtonFile id="ChooseFile" accept="image/png, image/jpg, image/gif, image/jpeg" />
+                    </label>
+                    </div>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <Button text='Update Item' type='submit'/>
+                    <Button text='Delete Item' onClick={toggleConfirmDeleteModal}/>
+                        <Modal State={isConfirmDeleteModalActive} ChangeState={toggleConfirmDeleteModal} Title="Confirm?">
+                            <Button text='Delete Item' onClick={() => deleteItem(ID)}/>
+                            <Button text='Cancel' onClick={toggleConfirmDeleteModal}/>
+                        </Modal>
+                    <Button text='Cancel' onClick={toggleUpdateModal}/>
+                </Form>
             </div>
         </Modal>
         <Modal State={isAddModalActive} ChangeState={toggleAddModal} Title="Add Employee">
@@ -200,9 +203,9 @@ export function Employees(){
                 <br/>
                 <br/>
                 <br/>
-                <Button Text='Add Other Employee' onClick={saveMore}/>
-                <Button Text='Add Employee' onClick={saveOne}/>
-                <Button Text='Cancel' onClick={toggleAddModal}/>
+                <Button text='Add Other Employee' onClick={saveMore}/>
+                <Button text='Add Employee' onClick={saveOne}/>
+                <Button text='Cancel' onClick={toggleAddModal}/>
             </div>
         </Modal>
 

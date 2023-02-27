@@ -7,7 +7,7 @@ const sendRequest = (url, body = {}, method = 'GET', getFunction) => {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(body)
-    });
+    }).then(res => console.log(res.json()));
     return fetch(url, {
         method: method,
         headers: {

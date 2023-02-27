@@ -5,7 +5,7 @@ const TextInput = ({id, text, onChange, value}) => {
         <>
             <br/>
             <label htmlFor={id}>{text} :</label><br/>
-            <input id={id} type="text" onChange={onChange} value={value}/><br/>
+            <input id={id} name={id} type="text" onChange={onChange} value={value}/><br/>
         </>
     );
 }
