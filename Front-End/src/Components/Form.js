@@ -7,8 +7,7 @@ const Form = ({URL, method, name, id, children}) => {
         const form = e.target;
         const formData = Object.fromEntries(new FormData(form).entries());
 
-        console.log("typeof formData");
-        console.log(typeof formData);
+        console.log(formData);
 
         if (id) {
             sendRequest(URL, {id: id, [name]: formData}, method);
