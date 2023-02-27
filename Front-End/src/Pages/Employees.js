@@ -151,11 +151,12 @@ export function Employees(){
         </div>
         <Modal State={isUpdateModalActive} ChangeState={toggleUpdateModal} Title="Update Employee">
             <div className="ModalBody">
-                <Form URL={URL} method={"PATCH"}>
+                <Form URL={URL} method={"PATCH"} name="employee" id={ID}>
                     <div className="ModalRight">
+                        <input type="hidden" id="id" name="id" value={ID}/>
                         <TextInput id="name" text="Employee Name" onChange={getName} value={EName}/>
                         <TextInput id="rut" text="Employee Rut" onChange={getRut} value={ERut}/>
-                        <TextInput id="mail" text="Employee Mail" onChange={getMail} value={EMail}/>
+                        <TextInput id="email" text="Employee Mail" onChange={getMail} value={EMail}/>
                         <TextInput id="direction" text="Employee Direction" onChange={getDirection} value={EDirection}/>
                         <TextInput id="phone" text="Employee Phone" onChange={getPhone} value={EPhone}/>
                         <SelectionInput id="status" text="Employee Status" values={States}/>

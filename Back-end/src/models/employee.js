@@ -100,7 +100,8 @@ EmployeeSchema.statics.update = function (id, employeeInfo) {
     // Si no existe el campo en el req.body, arrojara un Error
     if(!id) throw new Error('id is required');
     
-    console.log(id);
+    console.log("sEXOOOOOOOOOOOOO");
+    console.log(employeeInfo);
 
     const model = this;
     

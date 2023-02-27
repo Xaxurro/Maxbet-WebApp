@@ -1,16 +1,20 @@
 import "../Css/Table.css"
 import { sendRequest } from "../Helpers/sendRequest";
 
-const Form = ({URL, method, name, children}) => {
+const Form = ({URL, method, name, id, children}) => {
     function handleSubmit(e) {
         e.preventDefault();
         const form = e.target;
-        const formData = new FormData(form);
+        const formData = Object.fromEntries(new FormData(form).entries());
 
-        sendRequest(URL, formData, method);
+        console.log("typeof formData");
+        console.log(typeof formData);
 
-        const formJson = Object.fromEntries(formData.entries());
-        console.log(formJson);
+        if (id) {
+            sendRequest(URL, {id: id, [name]: formData}, method);
+        } else {
+            sendRequest(URL, {[name]: formData}, method);
+        }
     }
 
     return(
