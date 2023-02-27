@@ -17,7 +17,7 @@ const URL = "http://localhost:5000/product/";
 
 export function Inventory() {
     const [isAddModalActive, setAddModalState] = useState(false);
-    const [isModalActive, setModalState] = useState(false);
+    const [isConfirmDeleteModalActive, setConfirmDeleteModalState] = useState(false);
     const [isUpdateModalActive, setUpdateModalState] = useState(false);
     const [initDatos, setInitDatos] = useState(false);
     const [items, setItems] = useState([]);
@@ -29,8 +29,8 @@ export function Inventory() {
     const [IOwner, setIOwner] = useState("");
 
 
-    const toggleModal = () =>{
-        setModalState(!isModalActive);
+    const toggleConfirmDeleteModal = () =>{
+        setConfirmDeleteModalState(!isConfirmDeleteModalActive);
     }
     const toggleAddModal = () => {
         setAddModalState(!isAddModalActive);
@@ -70,7 +70,7 @@ export function Inventory() {
             }
         };
 
-        sendRequest(URL, data, 'POST').then(() => toggleAddModal());
+        sendRequest(URL, data, 'POST', getItems).then(() => toggleAddModal());
     }
 
     const saveMore = () => {
@@ -84,7 +84,7 @@ export function Inventory() {
             }
         };
 
-        sendRequest(URL, data, 'POST').then(setISerial(""));
+        sendRequest(URL, data, 'POST', getItems).then(setISerial(""));
     }
 
     const update = () => {
@@ -99,7 +99,7 @@ export function Inventory() {
             }
         };
 
-        sendRequest(URL, data, 'POST').then(() => toggleUpdateModal());
+        sendRequest(URL, data, 'PATCH', getItems).then(() => toggleUpdateModal());
     }
 
     const deleteItem = serial => {
@@ -107,7 +107,7 @@ export function Inventory() {
             serial: serial
         };
 
-        sendRequest(URL, item, 'DELETE').then(() =>toggleModal()).then(toggleUpdateModal());
+        sendRequest(URL, item, 'DELETE', getItems).then(() => {toggleConfirmDeleteModal(); toggleUpdateModal();});
     }
 
     const getName = e => { setIName(e.target.value) }
@@ -155,7 +155,7 @@ export function Inventory() {
                     <div className="ModalRight">
                         <TextInput id="ISerial" text="Item Serial" onChange={getSerial} value={ISerial}/>
                         <TextInput id="IName" text="Item Name" onChange={getName} value={IName}/>
-                        <TextInput id="IOrigin" text="Item Origin" onChange={getOrigin} value={IName}/>
+                        <TextInput id="IOrigin" text="Item Origin" onChange={getOrigin} value={IOrigin}/>
                         <TextInput id="IOwner" text="Item Owner" onChange={getOwner} value={IOwner}/>
                     </div>
 
@@ -171,11 +171,10 @@ export function Inventory() {
                     <br />
                     <br />
                     <Button Text='Update Item' onClick={update}/>
-                    <Button Text='Delete Item' onClick={toggleModal}/>
-                    <Modal State={isModalActive} ChangeState={toggleModal} Title="Confirm?">
+                    <Button Text='Delete Item' onClick={toggleConfirmDeleteModal}/>
+                    <Modal State={isConfirmDeleteModalActive} ChangeState={toggleConfirmDeleteModal} Title="Confirm?">
                         <Button Text='Delete Item' onClick={() => deleteItem(OldSerial)}/>
-                        <Button Text='Cancel' onClick={toggleModal}/>
-
+                        <Button Text='Cancel' onClick={toggleConfirmDeleteModal}/>
                     </Modal>
                     <Button Text='Cancel' onClick={toggleUpdateModal}/>
                 </div>

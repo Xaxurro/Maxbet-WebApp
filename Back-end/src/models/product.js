@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const registryChanges = require('../helpers/registryChanges');
+const registryNewObject = require('../helpers/registryNewObject');
 
 // Estructura del documento inicial en Mongo, para más info:
 // https://mongoosejs.com/docs/schematypes.html
@@ -71,12 +73,7 @@ ProductSchema.statics.register = function (productInfo) {
                 history: []
             };
             
-            // Agrega al historial del producto los datos iniciales
-            for (const key in newProduct) {
-                if (Object.hasOwnProperty.call(newProduct, key) && key != "history" && newProduct[key] != undefined) {
-                    newProduct.history.push({change: "CREADO", comment: `${key}: ${newProduct[key]}`});
-                }
-            }
+            registryNewObject(newProduct);
             
             // Busca el padre del objeto (si es que tiene), si lo encuentra lo agrega al doc, si no arroja un Error
             if (productInfo.parent) {
@@ -100,7 +97,7 @@ ProductSchema.statics.update = function (serial, productInfo) {
     const model = this;
 
     return this.findOne({serial: serial})
-    .then(async product => {
+    .then(product => {
         // Si encuentra un producto con el mismo serial arroja un Error
         if(!product) throw new Error('product doesnt exists');
         
@@ -114,12 +111,7 @@ ProductSchema.statics.update = function (serial, productInfo) {
             history: product.history
         };
 
-        // Agrega al historial del producto los cambios realizados
-        for (const key in newProduct) {
-            if (Object.hasOwnProperty.call(newProduct, key) && key != "history" && newProduct[key] != undefined) {
-                newProduct.history.push({change: "MODIFICADO", comment: `${key}: ${newProduct[key]}`});
-            }
-        }
+        registryChanges(product, newProduct)
         
         // Busca el padre del objeto (si es que tiene), si lo encuentra lo agrega al doc, si no arroja un Error
         if (productInfo.parent) {
@@ -143,15 +135,14 @@ ProductSchema.statics.getOne = function (serial) {
     // Despues envia los datos
     const model = this;
 
-    return this.findOne({serial: serial}).then(async data => {
+    return this.findOne({serial: serial}).then(data => {
         if (!data) throw new Error("Product doesn't exists");
 
         const product = {
             product: data
         }
         
-        let children = await model.find({parent: data._id}).then(children => children);
-        if(children) product["children"] = children;
+        model.find({parent: data._id}).then(children => {if(children) product["children"] = children});
         
         return product;
     });
@@ -170,10 +161,10 @@ ProductSchema.statics.unRegister = function (serial) {
     const model = this;
 
     // Busca el id del padre
-    this.findOne({serial: serial}).then(async parent => {
+    this.findOne({serial: serial}).then(parent => {
         if(!parent) throw new Error("Product doesn't exists");
         // Quita la referencia de los hijos
-        await model.updateMany({parent: parent._id}, {$unset: {parent: ""}});
+        model.updateMany({parent: parent._id}, {$unset: {parent: ""}});
     })
 
     // Elimina al padre
