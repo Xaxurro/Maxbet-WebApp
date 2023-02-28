@@ -6,7 +6,6 @@ const productController = require('../controllers/productController');
 
 router.post('/', productController.register);
 router.patch('/', productController.update);
-router.get('/:serial', productController.getOne);
 router.get('/', productController.getAll);
 router.delete('/', productController.unRegister);
 

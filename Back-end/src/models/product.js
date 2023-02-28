@@ -129,29 +129,18 @@ ProductSchema.statics.update = function (serial, productInfo) {
     .then(productUpdated => productUpdated)
 };
 
-ProductSchema.statics.getOne = function (serial) {
-    if(!serial) throw new Error('serial is required');
-    // Busca el doc que pase por el filtro de la funcion find
-    // Despues envia los datos
-    const model = this;
-
-    return this.findOne({serial: serial}).then(data => {
-        if (!data) throw new Error("Product doesn't exists");
-
-        const product = {
-            product: data
-        }
-        
-        model.find({parent: data._id}).then(children => {if(children) product["children"] = children});
-        
-        return product;
-    });
-};
-
-ProductSchema.statics.getAll = function () {
+ProductSchema.statics.getAll = function (filter) {
     // Busca los docs que pasen por el filtro de la funcion find
     // Despues envia los datos
-    return this.find();
+    const query = {};
+
+    if (filter.serial) query.serial = { $regex: filter.serial, $options: "i" };
+    if (filter.name) query.name = { $regex: filter.name, $options: "i" };
+    if (filter.state) query.state = { $eq: filter.state };
+    if (filter.origin) query.origin = { $regex: filter.origin, $options: "i" };
+    if (filter.owner) query.owner = { $regex: filter.owner, $options: "i" };
+
+    return this.find(query);
 };
 
 ProductSchema.statics.unRegister = function (serial) {
