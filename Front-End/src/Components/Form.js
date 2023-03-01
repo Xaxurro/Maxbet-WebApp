@@ -1,18 +1,16 @@
 import "../Css/Table.css"
 import { sendRequest } from "../Helpers/sendRequest";
 
-const Form = ({URL, method, name, id, children}) => {
+const Form = ({URL, method, name, id, changeState, getData, children}) => {
     function handleSubmit(e) {
         e.preventDefault();
         const form = e.target;
         const formData = Object.fromEntries(new FormData(form).entries());
 
-        console.log(formData);
-
         if (id) {
-            sendRequest(URL, {id: id, [name]: formData}, method);
+            sendRequest(URL, {id: id, [name]: formData}, method, getData).then(() => changeState());
         } else {
-            sendRequest(URL, {[name]: formData}, method);
+            sendRequest(URL, {[name]: formData}, method, getData).then(() => changeState());
         }
     }
 

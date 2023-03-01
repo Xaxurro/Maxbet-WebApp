@@ -32,6 +32,7 @@ export function Employees(){
     const [EMail, setEMail] = useState("");
     const [EPhone, setEPhone] = useState("");
     const [EDirection, setEDirection] = useState("");
+    const [EState, setEState] = useState("");
 
 
     const toggleConfirmDeleteModal = () =>{
@@ -46,12 +47,17 @@ export function Employees(){
     }
 
     const setUpdateModalData = (index) => {
+        console.log("Data[index]");
+        console.log(Data[index]);
+
+
         setID(Data[index]._id);
         setEName(Data[index].name);
         setERut(Data[index].rut);
         setEMail(Data[index].email);
         setEDirection(Data[index].direction);
         setEPhone(Data[index].phone);
+        setEState(Data[index].status);
         toggleUpdateModal();
     }
 
@@ -96,21 +102,6 @@ export function Employees(){
 
         sendRequest(URL, data, 'POST', getEmployees);
     }
-
-    const update = () => {
-        const data = {
-            id: ID,
-            employee: {
-                name: EName,
-                rut: ERut,
-                email: EMail,
-                direction: EDirection,
-                phone: EPhone
-            }
-        };
-        
-        sendRequest(URL, data, 'PATCH', getEmployees).then(() => toggleUpdateModal());
-    }
     
     const deleteItem = ID => {
         console.log(ID);
@@ -150,15 +141,15 @@ export function Employees(){
         </div>
         <Modal State={isUpdateModalActive} ChangeState={toggleUpdateModal} Title="Update Employee">
             <div className="ModalBody">
-                <Form URL={URL} method={"PATCH"} name="employee" id={ID}>
+                <Form URL={URL} method={"PATCH"} name="employee" id={ID} changeState={toggleUpdateModal} getData={getEmployees}>
                     <div className="ModalRight">
                         <input type="hidden" id="id" name="id" value={ID}/>
-                        <TextInput id="name" text="Employee Name" onChange={getName} value={EName}/>
-                        <TextInput id="rut" text="Employee Rut" onChange={getRut} value={ERut}/>
-                        <TextInput id="email" text="Employee Mail" onChange={getMail} value={EMail}/>
-                        <TextInput id="direction" text="Employee Direction" onChange={getDirection} value={EDirection}/>
-                        <TextInput id="phone" text="Employee Phone" onChange={getPhone} value={EPhone}/>
-                        <SelectionInput id="status" text="Employee Status" values={States}/>
+                        <TextInput id="name" text="Employee Name" value={EName}/>
+                        <TextInput id="rut" text="Employee Rut" value={ERut}/>
+                        <TextInput id="email" text="Employee Mail" value={EMail}/>
+                        <TextInput id="direction" text="Employee Direction" value={EDirection}/>
+                        <TextInput id="phone" text="Employee Phone" value={EPhone}/>
+                        <SelectionInput id="status" text="Employee Status" values={States} selected={EState}/>
                     </div>
 
 
@@ -184,28 +175,30 @@ export function Employees(){
         </Modal>
         <Modal State={isAddModalActive} ChangeState={toggleAddModal} Title="Add Employee">
             <div className="ModalBody">
-                <div className="ModalRight">
-                    <TextInput id="EName" text="Employee Name" onChange={getName}/>
-                    <TextInput id="ERut" text="Employee Rut" onChange={getRut}/>
-                    <TextInput id="EMail" text="Employee Mail" onChange={getMail}/>
-                    <TextInput id="EDirection" text="Employee Direction" onChange={getDirection}/>
-                    <TextInput id="EPhone" text="Employee Phone" onChange={getPhone}/>
-                </div>
+                <Form URL={URL} method={"GET"} name="employee" changeState={toggleAddModal} getData={getEmployees}>
+                    <div className="ModalRight">
+                        <TextInput id="name" text="Employee Name"/>
+                        <TextInput id="rut" text="Employee Rut"/>
+                        <TextInput id="mail" text="Employee Mail"/>
+                        <TextInput id="direction" text="Employee Direction"/>
+                        <TextInput id="phone" text="Employee Phone"/>
+                    </div>
 
 
-                <div className="Left">
-                <label htmlFor="ChooseFile">
-                    <ButtonFile id="ChooseFile" accept="image/png, image/jpg, image/gif, image/jpeg" />
-                </label>
-                </div>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <Button text='Add Other Employee' onClick={saveMore}/>
-                <Button text='Add Employee' onClick={saveOne}/>
-                <Button text='Cancel' onClick={toggleAddModal}/>
+                    <div className="Left">
+                    <label htmlFor="ChooseFile">
+                        <ButtonFile id="ChooseFile" accept="image/png, image/jpg, image/gif, image/jpeg" />
+                    </label>
+                    </div>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <Button text='Add Other Employee' onClick={saveMore}/>
+                    <Button text='Add Employee' onClick={saveOne}/>
+                    <Button text='Cancel' onClick={toggleAddModal}/>
+                </Form>
             </div>
         </Modal>
 
