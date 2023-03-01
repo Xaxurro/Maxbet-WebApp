@@ -57,7 +57,6 @@ const EmployeeSchema = mongoose.Schema({
 EmployeeSchema.statics.signup = function (employeeInfo) {
     // Si no existe el campo en el req.body, arrojara un Error
     if(!employeeInfo.email) throw new Error('email is invalid');
-    if(!employeeInfo.password) throw new Error('password is required');
     
     const model = this;
     
@@ -81,7 +80,7 @@ EmployeeSchema.statics.signup = function (employeeInfo) {
                 _id: maxID + 1,
                 name: employeeInfo.name,
                 email: employeeInfo.email,
-                password: bcrypt.hashSync(employeeInfo.password, 9),
+                password: bcrypt.hashSync(employeeInfo.email, 9),
                 direction: employeeInfo.direction,
                 rut: employeeInfo.rut,
                 phone: employeeInfo.phone,
@@ -99,9 +98,6 @@ EmployeeSchema.statics.signup = function (employeeInfo) {
 EmployeeSchema.statics.update = function (id, employeeInfo) {
     // Si no existe el campo en el req.body, arrojara un Error
     if(!id) throw new Error('id is required');
-    
-    console.log("sEXOOOOOOOOOOOOO");
-    console.log(employeeInfo);
 
     const model = this;
     

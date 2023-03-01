@@ -66,34 +66,6 @@ export function Inventory() {
             .then(data => setItems([...data]));
     }
 
-    const saveOne = () => {
-        const data = {
-            product: {
-                name: IName,
-                serial: ISerial,
-                state: "Recibido",
-                origin: IOrigin,
-                owner: IOwner,
-            }
-        };
-
-        sendRequest(URL, data, 'POST', getItems).then(() => toggleAddModal());
-    }
-
-    const saveMore = () => {
-        const data = {
-            product: {
-                name: IName,
-                serial: ISerial,
-                state: "Recibido",
-                origin: IOrigin,
-                owner: IOwner,
-            }
-        };
-
-        sendRequest(URL, data, 'POST', getItems).then(setISerial(""));
-    }
-
     const update = () => {
         const data = {
             serial: OldSerial,

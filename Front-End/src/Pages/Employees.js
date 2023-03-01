@@ -112,12 +112,6 @@ export function Employees(){
         sendRequest(URL, item, 'DELETE', getEmployees).then(() => {toggleConfirmDeleteModal(); toggleUpdateModal();});
     }
 
-    const getName = e => { setEName(e.target.value) };
-    const getRut = e => { setERut(e.target.value) };
-    const getMail = e => { setEMail(e.target.value) };
-    const getDirection = e => { setEDirection(e.target.value) };
-    const getPhone = e => { setEPhone(e.target.value) };
-
     if (!initDatos) {
         getEmployees();
         setInitDatos(true)
@@ -175,11 +169,11 @@ export function Employees(){
         </Modal>
         <Modal State={isAddModalActive} ChangeState={toggleAddModal} Title="Add Employee">
             <div className="ModalBody">
-                <Form URL={URL} method={"GET"} name="employee" changeState={toggleAddModal} getData={getEmployees}>
+                <Form URL={URL} method={"POST"} name="employee" getData={getEmployees}>
                     <div className="ModalRight">
                         <TextInput id="name" text="Employee Name"/>
                         <TextInput id="rut" text="Employee Rut"/>
-                        <TextInput id="mail" text="Employee Mail"/>
+                        <TextInput id="email" text="Employee Mail"/>
                         <TextInput id="direction" text="Employee Direction"/>
                         <TextInput id="phone" text="Employee Phone"/>
                     </div>
@@ -195,8 +189,8 @@ export function Employees(){
                     <br/>
                     <br/>
                     <br/>
-                    <Button text='Add Other Employee' onClick={saveMore}/>
-                    <Button text='Add Employee' onClick={saveOne}/>
+                    <Button text='Add Other Employee' type="submit"/>
+                    <Button text='Add Employee' onClick={() => toggleAddModal}/>
                     <Button text='Cancel' onClick={toggleAddModal}/>
                 </Form>
             </div>
