@@ -6,6 +6,7 @@ import { Modal } from "../Components/Modal";
 import { useState, useEffect } from "react";
 import { TextInput } from "../Components/TextInput";
 import { sendRequest } from "../Helpers/sendRequest";
+import { Form } from "../Components/Form";
 
 import "../Css/Modal.css"
 
@@ -159,7 +160,7 @@ function handleSubmit(e) {
     console.log(formJson.IName);
     Object.keys(formJson).map((values, i) => console.log(formJson[values]));
     toggleSearchmodal()
-    }
+}
 
     // console.log(items[1].name);
 
@@ -220,27 +221,30 @@ function handleSubmit(e) {
             </Modal>
             <Modal State={isAddModalActive} ChangeState={toggleAddModal} Title="Add Item">
                 <div className="ModalBody">
-                    <div className="ModalRight">
-                        <TextInput id="ISerial" text="Item Serial" onChange={getSerial}/>
-                        <TextInput id="IName" text="Item Name" onChange={getName}/>
-                        <TextInput id="IOrigin" text="Item Origin" onChange={getOrigin}/>
-                        <TextInput id="IOwner" text="Item Owner" onChange={getOwner}/>
-                    </div>
+                    <Form URL={URL} method={"POST"} name="product" getData={getItems}>
+                        <div className="ModalRight">
+                            <input type="hidden" id="state" name="state" value={"Recibido"}/>
+                            <TextInput id="serial" text="Item Serial"/>
+                            <TextInput id="name" text="Item Name"/>
+                            <TextInput id="origin" text="Item Origin"/>
+                            <TextInput id="owner" text="Item Owner"/>
+                        </div>
 
 
-                    <div className="Left">
-                        <label htmlFor="ChooseFile">
-                            <ButtonFile id="ChooseFile" accept="image/png, image/jpg, image/gif, image/jpeg" />
-                        </label>
-                    </div>
-                    <br />
-                    <br />
-                    <br />
-                    <br />
-                    <br />
-                    <Button text='Add OtherItem' onClick={saveMore}/>
-                    <Button text='Add Item' onClick={saveOne}/>
-                    <Button text='Cancel' onClick={toggleAddModal}/>
+                        <div className="Left">
+                            <label htmlFor="ChooseFile">
+                                <ButtonFile id="ChooseFile" accept="image/png, image/jpg, image/gif, image/jpeg" />
+                            </label>
+                        </div>
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <Button text='Add Another Item' type='submit'/>
+                        <Button text='Add Item' type='submit' onClick={() => toggleAddModal()}/>
+                        <Button text='Cancel' onClick={toggleAddModal}/>
+                    </Form>
                 </div>
             </Modal>
             <Table data={items} column={Titles} setModalData={setUpdateModalData} />

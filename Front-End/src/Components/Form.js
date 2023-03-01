@@ -8,9 +8,9 @@ const Form = ({URL, method, name, id, changeState, getData, children}) => {
         const formData = Object.fromEntries(new FormData(form).entries());
 
         if (id) {
-            sendRequest(URL, {id: id, [name]: formData}, method, getData).then(() => changeState());
+            sendRequest(URL, {id: id, [name]: formData}, method, getData).then(() => {if(changeState) changeState()});
         } else {
-            sendRequest(URL, {[name]: formData}, method, getData).then(() => changeState());
+            sendRequest(URL, {[name]: formData}, method, getData).then(() => {if(changeState) changeState()});
         }
     }
 
