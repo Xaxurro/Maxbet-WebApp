@@ -48,6 +48,17 @@ module.exports.getAll = function (req, res) {
     }
 }
 
+module.exports.getFilter = function (req, res) {
+    try {
+        ProductModel.getFilter(req.body)
+        .then(data => {
+            response.getAllData(req, res, data);
+        }).catch(error => response.error(req, res, error.message, 200));
+    } catch (error) {
+        response.error(req, res, error.message);
+    }
+}
+
 module.exports.unRegister = function (req, res) {
     // Devuelve un Error si no encuentra un 'product' en la request
     if (!req.body.serial) return response.error(req, res, 'serial not found', 200);

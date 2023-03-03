@@ -129,7 +129,14 @@ ProductSchema.statics.update = function (serial, productInfo) {
     .then(productUpdated => productUpdated)
 };
 
-ProductSchema.statics.getAll = function (filter) {
+ProductSchema.statics.getAll = function () {
+    // Busca los docs que pasen por el filtro de la funcion find
+    // Despues envia los datos
+
+    return this.find({});
+};
+
+ProductSchema.statics.getFilter = function (filter) {
     // Busca los docs que pasen por el filtro de la funcion find
     // Despues envia los datos
     const query = {};
