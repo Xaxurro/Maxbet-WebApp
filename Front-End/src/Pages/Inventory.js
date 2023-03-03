@@ -164,31 +164,33 @@ function handleSubmit(e) {
             </Modal>
             <Modal State={isUpdateModalActive} ChangeState={toggleUpdateModal} Title="Update Item">
                 <div className="ModalBody">
-                    <div className="ModalRight">
-                        <TextInput id="ISerial" text="Item Serial" onChange={getSerial} value={ISerial}/>
-                        <TextInput id="IName" text="Item Name" onChange={getName} value={IName}/>
-                        <TextInput id="IOrigin" text="Item Origin" onChange={getOrigin} value={IOrigin}/>
-                        <TextInput id="IOwner" text="Item Owner" onChange={getOwner} value={IOwner}/>
-                    </div>
+                    <Form URL={URL} method={"POST"} name="product" getData={getItems}>
+                        <div className="ModalRight">
+                            <TextInput id="ISerial" text="Item Serial" onChange={getSerial} value={ISerial}/>
+                            <TextInput id="IName" text="Item Name" onChange={getName} value={IName}/>
+                            <TextInput id="IOrigin" text="Item Origin" onChange={getOrigin} value={IOrigin}/>
+                            <TextInput id="IOwner" text="Item Owner" onChange={getOwner} value={IOwner}/>
+                        </div>
 
 
-                    <div className="Left">
-                        <label htmlFor="ChooseFile">
-                            <ButtonFile id="ChooseFile" accept="image/png, image/jpg, image/gif, image/jpeg"/>
-                        </label>
-                    </div>
-                    <br />
-                    <br />
-                    <br />
-                    <br />
-                    <br />
-                    <Button text='Update Item' onClick={update}/>
-                    <Button text='Delete Item' onClick={toggleConfirmDeleteModal}/>
-                    <Modal State={isConfirmDeleteModalActive} ChangeState={toggleConfirmDeleteModal} Title="Confirm?">
-                        <Button text='Delete Item' onClick={() => deleteItem(OldSerial)}/>
-                        <Button text='Cancel' onClick={toggleConfirmDeleteModal}/>
-                    </Modal>
-                    <Button text='Cancel' onClick={toggleUpdateModal}/>
+                        <div className="Left">
+                            <label htmlFor="ChooseFile">
+                                <ButtonFile id="ChooseFile" accept="image/png, image/jpg, image/gif, image/jpeg"/>
+                            </label>
+                        </div>
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <Button text='Update Item' onClick={update}/>
+                        <Button text='Delete Item' onClick={toggleConfirmDeleteModal}/>
+                        <Modal State={isConfirmDeleteModalActive} ChangeState={toggleConfirmDeleteModal} Title="Confirm?">
+                            <Button text='Delete Item' onClick={() => deleteItem(OldSerial)}/>
+                            <Button text='Cancel' onClick={toggleConfirmDeleteModal}/>
+                        </Modal>
+                        <Button text='Cancel' onClick={toggleUpdateModal}/>
+                    </Form>
                 </div>
             </Modal>
             <Modal State={isAddModalActive} ChangeState={toggleAddModal} Title="Add Item">
