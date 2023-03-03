@@ -60,7 +60,8 @@ export function Inventory() {
     }
 
     const getItems = () => {
-        sendRequest(URL)
+        const filter = {state: "Recibido"}
+    sendRequest(URL, filter, "PUT")
             .then(response => response.json())
             .then(json => {
                 if (json.success) return json.data;

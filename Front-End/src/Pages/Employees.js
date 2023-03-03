@@ -163,9 +163,9 @@ export function Employees(){
                             <Button text='Delete Item' onClick={() => deleteItem(ID)}/>
                             <Button text='Cancel' onClick={toggleConfirmDeleteModal}/>
                         </Modal>
-                    <Button text='Cancel' onClick={toggleUpdateModal}/>
                 </Form>
-            </div>
+            </div> 
+            <Button text='Cancel' onClick={toggleUpdateModal}/>
         </Modal>
         <Modal State={isAddModalActive} ChangeState={toggleAddModal} Title="Add Employee">
             <div className="ModalBody">
