@@ -5,6 +5,7 @@ import { Table } from "../Components/Table";
 import { Modal } from "../Components/Modal";
 import { useState, useEffect } from "react";
 import { TextInput } from "../Components/TextInput";
+import { SelectionInput } from "../Components/SelectionInput";
 import { sendRequest } from "../Helpers/sendRequest";
 import { Form } from "../Components/Form";
 
@@ -13,6 +14,7 @@ import "../Css/Modal.css"
 
 // const Filters = ["Item id", "Item Name", "Origin", "Owner Name", "Status"]
 const Titles = [{ heading: 'Serial', value: "serial" }, { heading: 'Item Name', value: "name" }, { heading: 'Origin', value: "origin" }, { heading: 'Owner Name', value: "owner" }, { heading: 'Status', value: "state" }];
+const States = [{name: "Recibido", id:"received"}, {name: "Entregado", id:"delivered"}];
 const UPDATETIME = 60000;
 const URL = "http://localhost:5000/product/";
 
@@ -31,6 +33,7 @@ export function Inventory() {
     const [ISerial, setISerial] = useState("");
     const [IOrigin, setIOrigin] = useState("");
     const [IOwner, setIOwner] = useState("");
+    const [IState, setIState] = useState("");
 
 
     const toggleSearchmodal = () =>{
@@ -66,20 +69,20 @@ export function Inventory() {
             .then(data => setItems([...data]));
     }
 
-    const update = () => {
-        const data = {
-            serial: OldSerial,
-            product: {
-                name: IName,
-                serial: ISerial,
-                state: "Recibido",
-                origin: IOrigin,
-                owner: IOwner,
-            }
-        };
+    // const update = () => {
+    //     const data = {
+    //         serial: OldSerial,
+    //         product: {
+    //             name: IName,
+    //             serial: ISerial,
+    //             state: "Recibido",
+    //             origin: IOrigin,
+    //             owner: IOwner,
+    //         }
+    //     };
 
-        sendRequest(URL, data, 'PATCH', getItems).then(() => toggleUpdateModal());
-    }
+    //     sendRequest(URL, data, 'PATCH', getItems).then(() => toggleUpdateModal());
+    // }
 
     const deleteItem = serial => {
         const item = {
@@ -164,12 +167,13 @@ function handleSubmit(e) {
             </Modal>
             <Modal State={isUpdateModalActive} ChangeState={toggleUpdateModal} Title="Update Item">
                 <div className="ModalBody">
-                    <Form URL={URL} method={"POST"} name="product" getData={getItems}>
+                    <Form URL={URL} method={"PATCH"} name="product" getData={getItems}>
                         <div className="ModalRight">
-                            <TextInput id="ISerial" text="Item Serial" onChange={getSerial} value={ISerial}/>
-                            <TextInput id="IName" text="Item Name" onChange={getName} value={IName}/>
-                            <TextInput id="IOrigin" text="Item Origin" onChange={getOrigin} value={IOrigin}/>
-                            <TextInput id="IOwner" text="Item Owner" onChange={getOwner} value={IOwner}/>
+                            <TextInput id="serial" text="Item Serial" value={ISerial}/>
+                            <TextInput id="name" text="Item Name" value={IName}/>
+                            <TextInput id="origin" text="Item Origin" value={IOrigin}/>
+                            <TextInput id="owner" text="Item Owner" value={IOwner}/>
+                            <SelectionInput id="state" text="Item Status" values={States} selected={IState}/>
                         </div>
 
 
@@ -183,7 +187,7 @@ function handleSubmit(e) {
                         <br />
                         <br />
                         <br />
-                        <Button text='Update Item' onClick={update}/>
+                        <Button text='Update Item' type='submit'/>
                         <Button text='Delete Item' onClick={toggleConfirmDeleteModal}/>
                         <Modal State={isConfirmDeleteModalActive} ChangeState={toggleConfirmDeleteModal} Title="Confirm?">
                             <Button text='Delete Item' onClick={() => deleteItem(OldSerial)}/>
