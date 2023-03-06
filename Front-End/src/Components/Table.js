@@ -33,7 +33,7 @@ const Table = ({data, column, setModalData}) => {
                 {data.map((item, index) => 
                     <><tr key={index} onClick={() => setModalData(index)}>
                     {column.map((columnItem, i) => {
-                        if (columnItem.heading == 'Employee Status') return (<td>{Icons[item[`status`]]}</td>);
+                        if (columnItem.heading === 'Employee Status') return (<td>{Icons[item[`status`]]}</td>);
                         return (
                             <td>{item[`${columnItem.value}`]}</td>
                         );

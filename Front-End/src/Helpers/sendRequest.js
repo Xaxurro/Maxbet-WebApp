@@ -15,7 +15,9 @@ const sendRequest = (url, body = {}, method = 'GET', getFunction) => {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(body)
-    }).then(() => getFunction());
+    })
+    // .then(response => console.log(response.json()))
+    .then(() => getFunction());
 };
 
 export {sendRequest}

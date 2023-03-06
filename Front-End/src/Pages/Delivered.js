@@ -32,7 +32,7 @@ export default function Delivered() {
     
     const getItems = () => {
     
-    const filter = {state: "Entregado"}
+    const filter = {state: "delivered"}
     sendRequest(URL, filter, "PUT")
         .then(response => response.json())
         .then(json => {
@@ -62,10 +62,6 @@ export default function Delivered() {
     const [Ihistory , setIhistory] = useState([])
     
     const setUpdateModalData = (index) => {
-        console.log("Data[index]");
-        console.log(items[index]);
-
-
         setISerial(items[index].serial);
         setIName(items[index].name);
         setIOrigin(items[index].origin);
@@ -77,7 +73,7 @@ export default function Delivered() {
     const deleteItem = ID => {
         console.log(ID);
         const item = {
-            id: ID
+            serial: ID
         };
 
         sendRequest(URL, item, 'DELETE', getItems).then(() => {toggleConfirmDeleteModal(); toggleUpdateModal();});
@@ -97,11 +93,6 @@ export default function Delivered() {
 
             <br />
             <br />
-            {
-            console.log("historial del producto")}
-            {
-            console.log(Ihistory)
-            }
             <Table data = {Ihistory} column={TitlesHistory} />
             <br />
             <br />

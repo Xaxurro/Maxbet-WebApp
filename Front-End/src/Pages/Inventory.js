@@ -5,7 +5,7 @@ import { Table } from "../Components/Table";
 import { Modal } from "../Components/Modal";
 import { useState, useEffect } from "react";
 import { TextInput } from "../Components/TextInput";
-import { SelectionInput } from "../Components/SelectionInput";
+// import { SelectionInput } from "../Components/SelectionInput";
 import { sendRequest } from "../Helpers/sendRequest";
 import { Form } from "../Components/Form";
 
@@ -51,17 +51,18 @@ export function Inventory() {
     }
 
     const setUpdateModalData = (index) => {
+        setOldSerial(items[index].serial);
         setISerial(items[index].serial);
         setIName(items[index].name);
         setIOrigin(items[index].origin);
         setIOwner(items[index].owner);
-        setOldSerial(items[index].serial);
+        setIState(items[index].state);
         toggleUpdateModal();
     }
 
     const getItems = () => {
-        const filter = {state: "Recibido"}
-    sendRequest(URL, filter, "PUT")
+        const filter = {state: "received"}
+        sendRequest(URL, filter, "PUT")
             .then(response => response.json())
             .then(json => {
                 if (json.success) return json.data;
@@ -70,20 +71,37 @@ export function Inventory() {
             .then(data => setItems([...data]));
     }
 
-    // const update = () => {
-    //     const data = {
-    //         serial: OldSerial,
-    //         product: {
-    //             name: IName,
-    //             serial: ISerial,
-    //             state: "Recibido",
-    //             origin: IOrigin,
-    //             owner: IOwner,
-    //         }
-    //     };
+    const save = () => {
+        const data = {
+            product: {
+                name: IName,
+                serial: ISerial,
+                state: "received",
+                origin: IOrigin,
+                owner: IOwner,
+            }
+        }
 
-    //     sendRequest(URL, data, 'PATCH', getItems).then(() => toggleUpdateModal());
-    // }
+        sendRequest(URL, data, 'POST', getItems);
+    }
+
+    const update = () => {
+        const data = {
+            serial: OldSerial,
+            product: {
+                name: IName,
+                serial: ISerial,
+                state: IState,
+                origin: IOrigin,
+                owner: IOwner,
+            }
+        };
+
+        console.log("data");
+        console.log(data);
+
+        sendRequest(URL, data, 'PATCH', getItems).then(() => toggleUpdateModal());
+    }
 
     const deleteItem = serial => {
         const item = {
@@ -97,6 +115,7 @@ export function Inventory() {
     const getSerial = e => { setISerial(e.target.value) }
     const getOrigin = e => { setIOrigin(e.target.value) }
     const getOwner = e => { setIOwner(e.target.value) }
+    const getState = e => { setIState(e.target.value) }
 
 
     /**
@@ -119,25 +138,6 @@ export function Inventory() {
         }, UPDATETIME);
     }, []);
 
-
-function handleSubmit(e) {
-    // Prevent the browser from reloading the page
-    e.preventDefault();
-    // Read the form data
-    const form = e.target;
-    const formData = new FormData(form);
-
-    // // You can pass formData as a fetch body directly:
-
-    // // Or you can work with it as a plain object:
-    const formJson = Object.fromEntries(formData.entries());
-    // console.log(formData);
-    console.log(formJson);
-    console.log(formJson.IName);
-    Object.keys(formJson).map((values, i) => console.log(formJson[values]));
-    toggleSearchmodal()
-}
-
     // console.log(items[1].name);
 
     return (
@@ -151,84 +151,73 @@ function handleSubmit(e) {
                     <Button className="Button" text="Add Item" onClick={toggleAddModal} />
                 </div>
             </div>
-            <Modal State={isSearchModalActive} ChangeState={toggleSearchmodal} Title="Search Modal">
 
-                <form method="post" onSubmit={handleSubmit}>
-                    
+            <Modal State={isSearchModalActive} ChangeState={toggleSearchmodal} Title="Search Modal">
                 <TextInput id="ISerial" text="Item Serial" />
-                    
                 <TextInput id="IName" text="Item Name" />
                 <TextInput id="IOrigin" text="Item Origin" />
                 <TextInput id="IOwner" text="Item Owner" />
                 <Button text="submit" type="submit" onClick/>
-                </form>
-
-                
-
             </Modal>
+
+
+
             <Modal State={isUpdateModalActive} ChangeState={toggleUpdateModal} Title="Update Item">
                 <div className="ModalBody">
-                    <Form URL={URL} method={"PATCH"} name="product" getData={getItems}>
-                        <div className="ModalRight">
-                            <TextInput id="serial" text="Item Serial" value={ISerial}/>
-                            <TextInput id="name" text="Item Name" value={IName}/>
-                            <TextInput id="origin" text="Item Origin" value={IOrigin}/>
-                            <TextInput id="owner" text="Item Owner" value={IOwner}/>
-                            <SelectionInput id="state" text="Item Status" values={States} selected={IState}/>
-                        </div>
-
-
-                        <div className="Left">
-                            <label htmlFor="ChooseFile">
-                                <ButtonFile id="ChooseFile" accept="image/png, image/jpg, image/gif, image/jpeg"/>
-                            </label>
-                        </div>
+                    <div className="ModalRight">
+                        <TextInput id="serial" text="Item Serial" onChange={getSerial} value={ISerial}/>
+                        <TextInput id="name" text="Item Name" onChange={getName} value={IName}/>
+                        <TextInput id="origin" text="Item Origin" onChange={getOrigin} value={IOrigin}/>
+                        <TextInput id="owner" text="Item Owner" onChange={getOwner} value={IOwner}/>
                         <br />
-                        <br />
-                        <br />
-                        <br />
-                        <br />
-                        <Button text='Update Item' type='submit'/>
-                        <Button text='Delete Item' onClick={toggleConfirmDeleteModal}/>
-                        <Modal State={isConfirmDeleteModalActive} ChangeState={toggleConfirmDeleteModal} Title="Confirm?">
-                            <Button text='Delete Item' onClick={() => deleteItem(OldSerial)}/>
-                            <Button text='Cancel' onClick={toggleConfirmDeleteModal}/>
-                        </Modal>
-                        <Button text='Cancel' onClick={toggleUpdateModal}/>
-                    </Form>
+                        <label>Item Status: 
+                            <select value={IState} onChange={getState}>
+                                <option value="received">Received</option>
+                                <option value="delivered">Delivered</option>
+                            </select>
+                        </label>
+                        <ButtonFile id="ChooseFile" text="File:" accept="image/png, image/jpg, image/gif, image/jpeg"/>
+                    </div>
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <Button text='Update Item' onClick={update}/>
+                    <Button text='Delete Item' onClick={toggleConfirmDeleteModal}/>
+                    <Modal State={isConfirmDeleteModalActive} ChangeState={toggleConfirmDeleteModal} Title="Confirm?">
+                        <Button text='Delete Item' onClick={() => deleteItem(OldSerial)}/>
+                        <Button text='Cancel' onClick={toggleConfirmDeleteModal}/>
+                    </Modal>
+                    <Button text='Cancel' onClick={toggleUpdateModal}/>
                 </div>
             </Modal>
+
+
+
             <Modal State={isAddModalActive} ChangeState={toggleAddModal} Title="Add Item">
                 <div className="ModalBody">
-                    <Form URL={URL} method={"POST"} name="product" getData={getItems}>
-                        <div className="ModalRight">
-                            <input type="hidden" id="state" name="state" value={"Recibido"}/>
-                            <TextInput id="serial" text="Item Serial"/>
-                            <TextInput id="name" text="Item Name"/>
-                            <TextInput id="origin" text="Item Origin"/>
-                            <TextInput id="owner" text="Item Owner"/>
-                        </div>
-
-
-                        <div className="Left">
-                            <label htmlFor="ChooseFile">
-                                <ButtonFile id="ChooseFile" accept="image/png, image/jpg, image/gif, image/jpeg" />
-                            </label>
-                        </div>
-                        <br />
-                        <br />
-                        <br />
-                        <br />
-                        <br />
-                        <Button text='Add Another Item' type='submit'/>
-                        <Button text='Add Item' type='submit' onClick={() => toggleAddModal()}/>
-                        <Button text='Cancel' onClick={toggleAddModal}/>
-                    </Form>
+                    <div className="ModalRight">
+                        <input type="hidden" id="state" name="state" value={"Recibido"}/>
+                        <TextInput id="serial" text="Item Serial" onChange={getSerial}/>
+                        <TextInput id="name" text="Item Name" onChange={getName}/>
+                        <TextInput id="origin" text="Item Origin" onChange={getOrigin}/>
+                        <TextInput id="owner" text="Item Owner" onChange={getOwner}/>
+                        <label htmlFor="ChooseFile">
+                            <ButtonFile id="ChooseFile" accept="image/png, image/jpg, image/gif, image/jpeg" />
+                        </label>
+                    </div>
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <Button text='Add Another Item' onClick={save}/>
+                    <Button text='Add Item' onClick={() => {save(); toggleAddModal();}}/>
+                    <Button text='Cancel' onClick={toggleAddModal}/>
                 </div>
             </Modal>
             <Table data={items} column={Titles} setModalData={setUpdateModalData} />
-
-
         </div>
     );
 }
