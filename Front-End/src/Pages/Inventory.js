@@ -5,9 +5,8 @@ import { Table } from "../Components/Table";
 import { Modal } from "../Components/Modal";
 import { useState, useEffect } from "react";
 import { TextInput } from "../Components/TextInput";
-// import { SelectionInput } from "../Components/SelectionInput";
+import { SelectionInput } from "../Components/SelectionInput";
 import { sendRequest } from "../Helpers/sendRequest";
-import { Form } from "../Components/Form";
 
 import "../Css/Modal.css"
 
@@ -97,13 +96,10 @@ export function Inventory() {
             }
         };
 
-        console.log("data");
-        console.log(data);
-
         sendRequest(URL, data, 'PATCH', getItems).then(() => toggleUpdateModal());
     }
 
-    const deleteItem = serial => {
+    const remove = serial => {
         const item = {
             serial: serial
         };
@@ -111,11 +107,11 @@ export function Inventory() {
         sendRequest(URL, item, 'DELETE', getItems).then(() => {toggleConfirmDeleteModal(); toggleUpdateModal();});
     }
 
-    const getName = e => { setIName(e.target.value) }
-    const getSerial = e => { setISerial(e.target.value) }
-    const getOrigin = e => { setIOrigin(e.target.value) }
-    const getOwner = e => { setIOwner(e.target.value) }
-    const getState = e => { setIState(e.target.value) }
+    const getName = e => setIName(e.target.value);
+    const getSerial = e => setISerial(e.target.value);
+    const getOrigin = e => setIOrigin(e.target.value);
+    const getOwner = e => setIOwner(e.target.value);
+    const getState = e => setIState(e.target.value);
 
 
     /**
@@ -137,8 +133,6 @@ export function Inventory() {
             getItems();
         }, UPDATETIME);
     }, []);
-
-    // console.log(items[1].name);
 
     return (
         <div className="Employees">
@@ -169,14 +163,8 @@ export function Inventory() {
                         <TextInput id="name" text="Item Name" onChange={getName} value={IName}/>
                         <TextInput id="origin" text="Item Origin" onChange={getOrigin} value={IOrigin}/>
                         <TextInput id="owner" text="Item Owner" onChange={getOwner} value={IOwner}/>
-                        <br />
-                        <label>Item Status: 
-                            <select value={IState} onChange={getState}>
-                                <option value="received">Received</option>
-                                <option value="delivered">Delivered</option>
-                            </select>
-                        </label>
-                        <ButtonFile id="ChooseFile" text="File:" accept="image/png, image/jpg, image/gif, image/jpeg"/>
+                        <SelectionInput id="state" text="Item State" options={States} onChange={getState} value={IState}/>
+                        <ButtonFile id="ChooseFile" accept="image/png, image/jpg, image/gif, image/jpeg" text="Item File"/>
                     </div>
                     <br />
                     <br />
@@ -186,7 +174,7 @@ export function Inventory() {
                     <Button text='Update Item' onClick={update}/>
                     <Button text='Delete Item' onClick={toggleConfirmDeleteModal}/>
                     <Modal State={isConfirmDeleteModalActive} ChangeState={toggleConfirmDeleteModal} Title="Confirm?">
-                        <Button text='Delete Item' onClick={() => deleteItem(OldSerial)}/>
+                        <Button text='Delete Item' onClick={() => remove(OldSerial)}/>
                         <Button text='Cancel' onClick={toggleConfirmDeleteModal}/>
                     </Modal>
                     <Button text='Cancel' onClick={toggleUpdateModal}/>
@@ -203,9 +191,7 @@ export function Inventory() {
                         <TextInput id="name" text="Item Name" onChange={getName}/>
                         <TextInput id="origin" text="Item Origin" onChange={getOrigin}/>
                         <TextInput id="owner" text="Item Owner" onChange={getOwner}/>
-                        <label htmlFor="ChooseFile">
-                            <ButtonFile id="ChooseFile" accept="image/png, image/jpg, image/gif, image/jpeg" />
-                        </label>
+                        <ButtonFile id="ChooseFile" text="Item File:" accept="image/png, image/jpg, image/gif, image/jpeg"/>
                     </div>
                     <br />
                     <br />

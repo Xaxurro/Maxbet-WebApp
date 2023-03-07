@@ -1,11 +1,14 @@
 import "../Css/Table.css"
 
-const SelectionInput = ({id, values, selected}) => {
+const SelectionInput = ({id, text, options, onChange, value}) => {
     return(
         <>
-            <br/>
-            
-            {values.map(value => <label htmlFor={id}><input type="radio" checked={selected === value.id} id={id} name={id} value={value.id}/>{value.name}</label>)}
+            <br />
+            <label>{text}: <br/>
+                <select id={id} value={value} onChange={onChange}>
+                    {options.map(option => <option value={option.id}>{option.name}</option>)}
+                </select>
+            </label>
         </>
     );
 }

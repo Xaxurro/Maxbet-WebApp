@@ -3,15 +3,17 @@ import "../Css/Button.css"
 // import { useState } from "react";
 
 
-export function ButtonFile(id, accept, text){
+const ButtonFile = ({id, accept, text}) => {
     // const [State, changeState] = useState(false);
 
     return(
         <>
             <br/>
-            <label htmlFor={id}>{text}
+            <label htmlFor={id}>{text}: <br/>
                 <input id={id} className="ButtonFile" type="file" accept={accept}/>
             </label>
         </>
     );
 }
+
+export {ButtonFile};
