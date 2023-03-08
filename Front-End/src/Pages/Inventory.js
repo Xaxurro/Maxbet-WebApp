@@ -26,20 +26,14 @@ export function Inventory() {
     
     const [initDatos, setInitDatos] = useState(false);
     const [items, setItems] = useState([]);
-    const [filters, setFilters] = useState({
-        name: "",
-        serial: "",
-        state: "received",
-        origin: "",
-        owner: "",
-    });
+    const [filters, setFilters] = useState({state: "received"});
 
-    const [OldSerial, setOldSerial] = useState("");
-    const [IName, setIName] = useState("");
-    const [ISerial, setISerial] = useState("");
-    const [IOrigin, setIOrigin] = useState("");
-    const [IOwner, setIOwner] = useState("");
-    const [IState, setIState] = useState("");
+    const [oldSerial, setOldSerial] = useState("");
+    const [name, setName] = useState("");
+    const [serial, setSerial] = useState("");
+    const [origin, setOrigin] = useState("");
+    const [owner, setOwner] = useState("");
+    const [state, setState] = useState("");
 
 
     const toggleSearchmodal = () =>{
@@ -58,16 +52,15 @@ export function Inventory() {
 
     const setUpdateModalData = (index) => {
         setOldSerial(items[index].serial);
-        setISerial(items[index].serial);
-        setIName(items[index].name);
-        setIOrigin(items[index].origin);
-        setIOwner(items[index].owner);
-        setIState(items[index].state);
+        setSerial(items[index].serial);
+        setName(items[index].name);
+        setOrigin(items[index].origin);
+        setOwner(items[index].owner);
+        setState(items[index].state);
         toggleUpdateModal();
     }
 
     const getItems = () => {
-        console.log(filters);
         sendRequest(URL, filters, "PUT")
             .then(response => response.json())
             .then(json => {
@@ -76,22 +69,23 @@ export function Inventory() {
             })
             .then(data => setItems([...data]));
     }
+
     const filter = () => {        
-        filters.serial = ISerial;
-        filters.name = IName;
-        filters.origin = IOrigin;
-        filters.owner = IOwner;
+        filters.serial = serial;
+        filters.name = name;
+        filters.origin = origin;
+        filters.owner = owner;
         getItems();
     }
 
     const save = () => {
         const data = {
             product: {
-                name: IName,
-                serial: ISerial,
+                name: name,
+                serial: serial,
+                origin: origin,
+                owner: owner,
                 state: "received",
-                origin: IOrigin,
-                owner: IOwner,
             }
         }
 
@@ -100,13 +94,13 @@ export function Inventory() {
 
     const update = () => {
         const data = {
-            serial: OldSerial,
+            serial: oldSerial,
             product: {
-                name: IName,
-                serial: ISerial,
-                state: IState,
-                origin: IOrigin,
-                owner: IOwner,
+                name: name,
+                serial: serial,
+                origin: origin,
+                owner: owner,
+                state: state,
             }
         };
 
@@ -122,19 +116,19 @@ export function Inventory() {
     }
 
     const cleanStates = () => {
-        setISerial("");
-        setIName("");
-        setIOrigin("");
-        setIOwner("");
+        setSerial("");
+        setName("");
+        setOrigin("");
+        setOwner("");
     }
 
 
 
-    const getName = e => setIName(e.target.value);
-    const getSerial = e => setISerial(e.target.value);
-    const getOrigin = e => setIOrigin(e.target.value);
-    const getOwner = e => setIOwner(e.target.value);
-    const getState = e => setIState(e.target.value);
+    const getName = e => setName(e.target.value);
+    const getSerial = e => setSerial(e.target.value);
+    const getOrigin = e => setOrigin(e.target.value);
+    const getOwner = e => setOwner(e.target.value);
+    const getState = e => setState(e.target.value);
 
 
     /**
@@ -164,18 +158,19 @@ export function Inventory() {
                 <h1><i>Inventory</i></h1>
                 <div className="right">
                     
-                    <Button className="Button" text="Search" onClick={() => {cleanStates();toggleSearchmodal()}} />
-                    <Button className="Button" text="Add Item" onClick={toggleAddModal} />
+                    <Button className="Button" text="Search" onClick={() => {cleanStates(); toggleSearchmodal();}} />
+                    <Button className="Button" text="Add Item" onClick={() => {cleanStates(); toggleAddModal();}} />
                 </div>
             </div>
 
-            <Modal State={isSearchModalActive} ChangeState={toggleSearchmodal} Title="Search Modal">
-                
-                <TextInput id="serial" text="Item Serial" onChange={getSerial} value={ISerial}/>
-                <TextInput id="name" text="Item Name" onChange={getName} value={IName}/>
-                <TextInput id="origin" text="Item Origin" onChange={getOrigin} value={IOrigin}/>
-                <TextInput id="owner" text="Item Owner" onChange={getOwner} value={IOwner}/>
-                <Button text="submit" onClick = {() => {filter();toggleSearchmodal()}}/>
+            <Modal State={isSearchModalActive} ChangeState={toggleSearchmodal} Title="Search">
+                <div className="ModalBody">
+                    <TextInput id="serial" text="Item Serial" onChange={getSerial} value={serial}/>
+                    <TextInput id="name" text="Item Name" onChange={getName} value={name}/>
+                    <TextInput id="origin" text="Item Origin" onChange={getOrigin} value={origin}/>
+                    <TextInput id="owner" text="Item Owner" onChange={getOwner} value={owner}/>
+                    <Button text="Search" onClick = {() => {filter();toggleSearchmodal();}}/>
+                </div>
             </Modal>
 
 
@@ -183,11 +178,11 @@ export function Inventory() {
             <Modal State={isUpdateModalActive} ChangeState={toggleUpdateModal} Title="Update Item">
                 <div className="ModalBody">
                     <div className="ModalRight">
-                        <TextInput id="serial" text="Item Serial" onChange={getSerial} value={ISerial}/>
-                        <TextInput id="name" text="Item Name" onChange={getName} value={IName}/>
-                        <TextInput id="origin" text="Item Origin" onChange={getOrigin} value={IOrigin}/>
-                        <TextInput id="owner" text="Item Owner" onChange={getOwner} value={IOwner}/>
-                        <SelectionInput id="state" text="Item State" options={States} onChange={getState} value={IState}/>
+                        <TextInput id="serial" text="Item Serial" onChange={getSerial} value={serial}/>
+                        <TextInput id="name" text="Item Name" onChange={getName} value={name}/>
+                        <TextInput id="origin" text="Item Origin" onChange={getOrigin} value={origin}/>
+                        <TextInput id="owner" text="Item Owner" onChange={getOwner} value={owner}/>
+                        <SelectionInput id="state" text="Item State" options={States} onChange={getState} value={state}/>
                         <ButtonFile id="ChooseFile" accept="image/png, image/jpg, image/gif, image/jpeg" text="Item File"/>
                     </div>
                     <br />
@@ -199,7 +194,7 @@ export function Inventory() {
                     <Button text='Delete Item' onClick={toggleConfirmDeleteModal}/>
                     <Button text='Cancel' onClick={toggleUpdateModal}/>
                     <Modal State={isConfirmDeleteModalActive} ChangeState={toggleConfirmDeleteModal} Title="Confirm?">
-                        <Button text='Delete Item' onClick={() => remove(OldSerial)}/>
+                        <Button text='Delete Item' onClick={() => remove(oldSerial)}/>
                         <Button text='Cancel' onClick={toggleConfirmDeleteModal}/>
                     </Modal>
                 </div>
@@ -210,19 +205,18 @@ export function Inventory() {
             <Modal State={isAddModalActive} ChangeState={toggleAddModal} Title="Add Item">
                 <div className="ModalBody">
                     <div className="ModalRight">
-                        <input type="hidden" id="state" name="state" value={"Recibido"}/>
-                        <TextInput id="serial" text="Item Serial" onChange={getSerial}/>
-                        <TextInput id="name" text="Item Name" onChange={getName}/>
-                        <TextInput id="origin" text="Item Origin" onChange={getOrigin}/>
-                        <TextInput id="owner" text="Item Owner" onChange={getOwner}/>
-                        <ButtonFile id="ChooseFile" text="Item File:" accept="image/png, image/jpg, image/gif, image/jpeg"/>
+                        <TextInput id="serial" text="Item Serial" onChange={getSerial} value={serial}/>
+                        <TextInput id="name" text="Item Name" onChange={getName} value={name}/>
+                        <TextInput id="origin" text="Item Origin" onChange={getOrigin} value={origin}/>
+                        <TextInput id="owner" text="Item Owner" onChange={getOwner} value={owner}/>
+                        <ButtonFile id="ChooseFile" text="Item File" accept="image/png, image/jpg, image/gif, image/jpeg"/>
                     </div>
                     <br />
                     <br />
                     <br />
                     <br />
                     <br />
-                    <Button text='Add Another Item' onClick={save}/>
+                    <Button text='Add Another Item' onClick={() => {save(); cleanStates();}}/>
                     <Button text='Add Item' onClick={() => {save(); toggleAddModal();}}/>
                     <Button text='Cancel' onClick={toggleAddModal}/>
                 </div>

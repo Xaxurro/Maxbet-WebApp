@@ -5,7 +5,10 @@ import "../Css/Button.css"
 
 const Button = ({className='Button', type='button', text, onClick}) => {
     return(
+        <>
+        <br/>
         <button type={type} className={className} onClick={onClick} >{text}</button>
+        </>
     );
 }
 

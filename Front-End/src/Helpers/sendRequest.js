@@ -16,7 +16,7 @@ const sendRequest = (url, body = {}, method = 'GET', getFunction) => {
         },
         body: JSON.stringify(body)
     })
-    // .then(response => console.log(response.json()))
+    .then(response => console.log(response.json()))
     .then(() => getFunction());
 };
 

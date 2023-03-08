@@ -41,9 +41,15 @@ const ProductSchema = mongoose.Schema(
             uppercase: true,
             required: [true, "Change is required"],
         },
-        comment: {
+        key: {
             type: String,
             uppercase: true,
+            required: [true, "Key is required"],
+        },
+        value: {
+            type: String,
+            uppercase: true,
+            required: [true, "Value is required"],
         },
     }],
 },)
