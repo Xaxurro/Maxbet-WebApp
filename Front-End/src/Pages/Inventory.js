@@ -69,6 +69,24 @@ export function Inventory() {
             })
             .then(data => setItems([...data]));
     }
+    const filter = () => {
+        const filter = 
+        
+        {
+            name: IName,
+            origin: IOrigin,
+            owner: IOwner,
+            serial: ISerial
+        }
+
+        sendRequest(URL, filter, "PUT")
+            .then(response => response.json())
+            .then(json => {
+                if (json.success) return json.data;
+                return [];
+            })
+            .then(data => setItems([...data]));
+    }
 
     const save = () => {
         const data = {
@@ -107,6 +125,15 @@ export function Inventory() {
         sendRequest(URL, item, 'DELETE', getItems).then(() => {toggleConfirmDeleteModal(); toggleUpdateModal();});
     }
 
+    const cleanStates = () => {
+        setISerial("");
+        setIName("");
+        setIOrigin("");
+        setIOwner("");
+    }
+
+
+
     const getName = e => setIName(e.target.value);
     const getSerial = e => setISerial(e.target.value);
     const getOrigin = e => setIOrigin(e.target.value);
@@ -141,17 +168,18 @@ export function Inventory() {
                 <h1><i>Inventory</i></h1>
                 <div className="right">
                     
-                    <Button className="Button" text="Search" onClick={toggleSearchmodal} />
+                    <Button className="Button" text="Search" onClick={() => {cleanStates();toggleSearchmodal()}} />
                     <Button className="Button" text="Add Item" onClick={toggleAddModal} />
                 </div>
             </div>
 
             <Modal State={isSearchModalActive} ChangeState={toggleSearchmodal} Title="Search Modal">
-                <TextInput id="ISerial" text="Item Serial" />
-                <TextInput id="IName" text="Item Name" />
-                <TextInput id="IOrigin" text="Item Origin" />
-                <TextInput id="IOwner" text="Item Owner" />
-                <Button text="submit" type="submit" onClick/>
+                
+                <TextInput id="serial" text="Item Serial" onChange={getSerial} value={ISerial}/>
+                <TextInput id="name" text="Item Name" onChange={getName} value={IName}/>
+                <TextInput id="origin" text="Item Origin" onChange={getOrigin} value={IOrigin}/>
+                <TextInput id="owner" text="Item Owner" onChange={getOwner} value={IOwner}/>
+                <Button text="submit" onClick = {() => {filter();toggleSearchmodal()}}/>
             </Modal>
 
 
@@ -173,11 +201,11 @@ export function Inventory() {
                     <br />
                     <Button text='Update Item' onClick={update}/>
                     <Button text='Delete Item' onClick={toggleConfirmDeleteModal}/>
+                    <Button text='Cancel' onClick={toggleUpdateModal}/>
                     <Modal State={isConfirmDeleteModalActive} ChangeState={toggleConfirmDeleteModal} Title="Confirm?">
                         <Button text='Delete Item' onClick={() => remove(OldSerial)}/>
                         <Button text='Cancel' onClick={toggleConfirmDeleteModal}/>
                     </Modal>
-                    <Button text='Cancel' onClick={toggleUpdateModal}/>
                 </div>
             </Modal>
 
