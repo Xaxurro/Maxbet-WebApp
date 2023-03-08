@@ -133,7 +133,7 @@ ProductSchema.statics.getAll = function () {
     // Busca los docs que pasen por el filtro de la funcion find
     // Despues envia los datos
 
-    return this.find({});
+    return this.find({}).sort('serial');
 };
 
 ProductSchema.statics.getFilter = function (filter) {
@@ -143,11 +143,11 @@ ProductSchema.statics.getFilter = function (filter) {
 
     if (filter.serial) query.serial = { $regex: filter.serial, $options: "i" };
     if (filter.name) query.name = { $regex: filter.name, $options: "i" };
-    if (filter.state) query.state = { $eq: filter.state };
     if (filter.origin) query.origin = { $regex: filter.origin, $options: "i" };
     if (filter.owner) query.owner = { $regex: filter.owner, $options: "i" };
+    if (filter.state) query.state = { $eq: filter.state };
 
-    return this.find(query);
+    return this.find(query).sort('serial');
 };
 
 ProductSchema.statics.unRegister = function (serial) {

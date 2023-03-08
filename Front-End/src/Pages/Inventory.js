@@ -26,6 +26,13 @@ export function Inventory() {
     
     const [initDatos, setInitDatos] = useState(false);
     const [items, setItems] = useState([]);
+    const [filters, setFilters] = useState({
+        name: "",
+        serial: "",
+        state: "received",
+        origin: "",
+        owner: "",
+    });
 
     const [OldSerial, setOldSerial] = useState("");
     const [IName, setIName] = useState("");
@@ -60,8 +67,8 @@ export function Inventory() {
     }
 
     const getItems = () => {
-        const filter = {state: "received"}
-        sendRequest(URL, filter, "PUT")
+        console.log(filters);
+        sendRequest(URL, filters, "PUT")
             .then(response => response.json())
             .then(json => {
                 if (json.success) return json.data;
@@ -69,23 +76,12 @@ export function Inventory() {
             })
             .then(data => setItems([...data]));
     }
-    const filter = () => {
-        const filter = 
-        
-        {
-            name: IName,
-            origin: IOrigin,
-            owner: IOwner,
-            serial: ISerial
-        }
-
-        sendRequest(URL, filter, "PUT")
-            .then(response => response.json())
-            .then(json => {
-                if (json.success) return json.data;
-                return [];
-            })
-            .then(data => setItems([...data]));
+    const filter = () => {        
+        filters.serial = ISerial;
+        filters.name = IName;
+        filters.origin = IOrigin;
+        filters.owner = IOwner;
+        getItems();
     }
 
     const save = () => {
