@@ -138,7 +138,6 @@ EmployeeSchema.statics.getFilter = function (filter) {
     if (filter.rut) query.rut = { $regex: filter.rut, $options: "i" };
     if (filter.phone) query.phone = { $regex: filter.phone, $options: "i" };
     if (filter.id) query._id = { $regex: filter.id };
-    console.log(query);
 
     return this.find(query).sort('_id');
 };
