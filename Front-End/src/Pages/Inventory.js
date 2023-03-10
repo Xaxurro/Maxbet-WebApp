@@ -1,5 +1,6 @@
 import { Button } from "../Components/Button"
 import { ButtonFile } from "../Components/ButtonFile"
+import { ButtonCleanFilters } from "../Components/ButtonCleanFilters";
 import { Table } from "../Components/Table";
 // import { Filter } from "../Components/Filter";
 import { Modal } from "../Components/Modal";
@@ -7,6 +8,8 @@ import { useState, useEffect } from "react";
 import { TextInput } from "../Components/TextInput";
 import { SelectionInput } from "../Components/SelectionInput";
 import { sendRequest } from "../Helpers/sendRequest";
+import { cleanStates } from "../Helpers/cleanStates";
+import { filter } from "../Helpers/filter";
 
 import "../Css/Modal.css"
 
@@ -34,6 +37,15 @@ export function Inventory() {
     const [origin, setOrigin] = useState("");
     const [owner, setOwner] = useState("");
     const [state, setState] = useState("");
+
+    const states = [
+        {name: "oldSerial", value: oldSerial, set: setOldSerial},
+        {name: "serial", value: serial, set: setSerial},
+        {name: "name", value: name, set: setName},
+        {name: "origin", value: origin, set: setOrigin},
+        {name: "owner", value: owner, set: setOwner},
+        {name: "state", value: state, set: setState},
+    ];
 
 
     const toggleSearchModal = () =>{
@@ -68,14 +80,6 @@ export function Inventory() {
                 return [];
             })
             .then(data => setItems([...data]));
-    }
-
-    const filter = () => {        
-        filters.serial = serial;
-        filters.name = name;
-        filters.origin = origin;
-        filters.owner = owner;
-        getItems();
     }
 
     const save = () => {
@@ -115,21 +119,6 @@ export function Inventory() {
         sendRequest(URL, item, 'DELETE', getItems).then(() => {toggleConfirmDeleteModal(); toggleUpdateModal();});
     }
 
-    const cleanStates = () => {
-        setSerial("");
-        setName("");
-        setOrigin("");
-        setOwner("");
-    }
-
-
-
-    const getName = e => setName(e.target.value);
-    const getSerial = e => setSerial(e.target.value);
-    const getOrigin = e => setOrigin(e.target.value);
-    const getOwner = e => setOwner(e.target.value);
-    const getState = e => setState(e.target.value);
-
 
     /**
      * En la linea 17 se crea un hook que mantiene el estado de la inicializacion de los datos,
@@ -157,19 +146,19 @@ export function Inventory() {
 
                 <h1><i>Inventory</i></h1>
                 <div className="right">
-                    
-                    <Button className="Button" text="Search" onClick={() => {cleanStates(); toggleSearchModal();}} />
-                    <Button className="Button" text="Add Item" onClick={() => {cleanStates(); toggleAddModal();}} />
+                    <ButtonCleanFilters filters={filters} states={states} get={getItems}/>
+                    <Button className="Button" text="Search" onClick={() => {cleanStates(states); toggleSearchModal();}} />
+                    <Button className="Button" text="Add Item" onClick={() => {cleanStates(states); toggleAddModal();}} />
                 </div>
             </div>
 
             <Modal State={isSearchModalActive} ChangeState={toggleSearchModal} Title="Search">
                 <div className="ModalBody">
-                    <TextInput id="serial" text="Item Serial" onChange={getSerial} value={serial}/>
-                    <TextInput id="name" text="Item Name" onChange={getName} value={name}/>
-                    <TextInput id="origin" text="Item Origin" onChange={getOrigin} value={origin}/>
-                    <TextInput id="owner" text="Item Owner" onChange={getOwner} value={owner}/>
-                    <Button text="Search" onClick = {() => {filter();toggleSearchModal();}}/>
+                    <TextInput id="serial" text="Item Serial" setValue={setSerial} value={serial}/>
+                    <TextInput id="name" text="Item Name" setValue={setName} value={name}/>
+                    <TextInput id="origin" text="Item Origin" setValue={setOrigin} value={origin}/>
+                    <TextInput id="owner" text="Item Owner" setValue={setOwner} value={owner}/>
+                    <Button text="Search" onClick = {() => {filter(filters, states, getItems);toggleSearchModal();}}/>
                 </div>
             </Modal>
 
@@ -178,12 +167,12 @@ export function Inventory() {
             <Modal State={isUpdateModalActive} ChangeState={toggleUpdateModal} Title="Update Item">
                 <div className="ModalBody">
                     <div className="ModalRight">
-                        <TextInput id="serial" text="Item Serial" onChange={getSerial} value={serial}/>
-                        <TextInput id="name" text="Item Name" onChange={getName} value={name}/>
-                        <TextInput id="origin" text="Item Origin" onChange={getOrigin} value={origin}/>
-                        <TextInput id="owner" text="Item Owner" onChange={getOwner} value={owner}/>
+                        <TextInput id="serial" text="Item Serial" setValue={setSerial} value={serial}/>
+                        <TextInput id="name" text="Item Name" setValue={setName} value={name}/>
+                        <TextInput id="origin" text="Item Origin" setValue={setOrigin} value={origin}/>
+                        <TextInput id="owner" text="Item Owner" setValue={setOwner} value={owner}/>
                         <ButtonFile id="ChooseFile" accept="image/png, image/jpg, image/gif, image/jpeg" text="Item File"/>
-                        <SelectionInput id="state" text="Item State" options={States} onChange={getState} value={state}/>
+                        <SelectionInput id="state" text="Item State" options={States} setValue={setState} value={state}/>
                     </div>
                     <br />
                     <br />
@@ -202,10 +191,10 @@ export function Inventory() {
             <Modal State={isAddModalActive} ChangeState={toggleAddModal} Title="Add Item">
                 <div className="ModalBody">
                     <div className="ModalRight">
-                        <TextInput id="serial" text="Item Serial" onChange={getSerial} value={serial}/>
-                        <TextInput id="name" text="Item Name" onChange={getName} value={name}/>
-                        <TextInput id="origin" text="Item Origin" onChange={getOrigin} value={origin}/>
-                        <TextInput id="owner" text="Item Owner" onChange={getOwner} value={owner}/>
+                        <TextInput id="serial" text="Item Serial" setValue={setSerial} value={serial}/>
+                        <TextInput id="name" text="Item Name" setValue={setName} value={name}/>
+                        <TextInput id="origin" text="Item Origin" setValue={setOrigin} value={origin}/>
+                        <TextInput id="owner" text="Item Owner" setValue={setOwner} value={owner}/>
                         <ButtonFile id="ChooseFile" text="Item File" accept="image/png, image/jpg, image/gif, image/jpeg"/>
                     </div>
                     <br />
@@ -213,7 +202,7 @@ export function Inventory() {
                     <br />
                     <br />
                     <br />
-                    <Button text='Add Another Item' onClick={() => {save(); cleanStates();}}/>
+                    <Button text='Add Another Item' onClick={() => {save(); cleanStates(states);}}/>
                     <Button text='Add Item' onClick={() => {save(); toggleAddModal();}}/>
                     <Button text='Cancel' onClick={toggleAddModal}/>
                 </div>

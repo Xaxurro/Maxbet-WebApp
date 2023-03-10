@@ -104,18 +104,11 @@ const Login = () => {
                         
 
                                 <br/>  
-                   
-                            <Button className="LoginButton" Text="Log in!" onClick={onLogin}/>
+                            <Button className="LoginButton" text="Log in!" onClick={onLogin}/>
                                 
                            
                         </div>
                     </form>
-                    <p>
-                        No account yet? {' '}
-                        <NavLink to="/signup">
-                            Sign up
-                        </NavLink>
-                    </p>
                 </div>
 
             </div>

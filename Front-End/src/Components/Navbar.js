@@ -2,6 +2,7 @@
 import "../Css/Navbar.css"
 import { Link, useMatch , useResolvedPath } from "react-router-dom";
 import { logout } from "../firebase";
+import { Button } from "./Button";
 
 
 export function Navbar(){
@@ -16,7 +17,7 @@ export function Navbar(){
                     <CustomLink to="/Inventory">Inventory</CustomLink>
                     <CustomLink to="/Delivered">Delivered</CustomLink>
                     NombreAdmin
-                    <button onClick={logout}>Log out</button>
+                    <Button text={"Log out"}onClick={logout}></Button>
                     
             </ul>
             </div>

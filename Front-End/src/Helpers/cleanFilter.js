@@ -1,10 +1,10 @@
 import { cleanStates } from "./cleanStates";
 
-const cleanFilter = (filter, setStates, get) => {
+const cleanFilter = (filter, states, get) => {
     for (const key in filter) {
         delete filter[key];
     }
-    cleanStates(setStates);
+    cleanStates(states);
     get();
 }
 

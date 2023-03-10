@@ -2,17 +2,16 @@ import React, { useState, useEffect } from "react";
 import { Button } from "../Components/Button"
 import { Legend } from "../Components/Legend"
 import { Table } from "../Components/Table";
-// import { Filter } from "../Components/Filter";
 import { Modal } from "../Components/Modal";
 import { ButtonFile } from "../Components/ButtonFile";
 import { ButtonCleanFilters } from "../Components/ButtonCleanFilters";
 import { TextInput } from "../Components/TextInput";
 import { SelectionInput } from "../Components/SelectionInput";
-
-import "../Css/Employees.css"
 import { sendRequest } from "../Helpers/sendRequest";
 import { cleanStates } from "../Helpers/cleanStates";
-import { cleanFilter } from "../Helpers/cleanFilter";
+import { filter } from "../Helpers/filter";
+
+import "../Css/Employees.css"
 
 // const Filters = ["Id Employee","Employee Name","Task","Employee Status"];
 const Titles =[{heading: 'Id Employee', value: "_id"},{heading: 'Employee Name', value: "name"},{heading: 'Employee Status', value: "status"}];
@@ -40,8 +39,15 @@ export function Employees(){
     const [direction, setDirection] = useState("");
     const [status, setStatus] = useState("");
 
-    const states = [id, rut, name, email, phone, direction, status];
-    const setStates = [setId, setRut, setName, setEmail, setPhone, setDirection, setStatus];
+    const states = [
+        {name: "id", value: id, set: setId},
+        {name: "rut", value: rut, set: setRut},
+        {name: "name", value: name, set: setName},
+        {name: "email", value: email, set: setEmail},
+        {name: "phone", value: phone, set: setPhone},
+        {name: "direction", value: direction, set: setDirection},
+        {name: "status", value: status, set: setStatus},
+    ];
 
     const toggleConfirmDeleteModal = () =>{
         setConfirmDeleteModalState(!isConfirmDeleteModalActive);
@@ -74,21 +80,11 @@ export function Employees(){
         sendRequest(URL, filters, "PUT")
         .then(response => response.json())
         .then(json => {
+            console.log(json);
             if (json.success) return json.data;
             return [];
         })
         .then(data => setEmployees([...data]));
-    }
-
-    const filter = () => {        
-        filters.id = id;
-        filters.name = name;
-        filters.rut = rut;
-        filters.email = email;
-        filters.direction = direction;
-        filters.phone = phone;
-        filters.state = status;
-        getEmployees();
     }
 
     const save = () => {
@@ -132,15 +128,6 @@ export function Employees(){
         sendRequest(URL, item, 'DELETE', getEmployees).then(() => {toggleConfirmDeleteModal(); toggleUpdateModal();});
     }
 
-    const getID = e => setId(e.target.value);
-    const getName = e => setName(e.target.value);
-    const getRut = e => setRut(e.target.value);
-    const getEmail = e => setEmail(e.target.value);
-    // const getPassword = e => setPassword(e.target.value);
-    const getDirection = e => setDirection(e.target.value);
-    const getPhone = e => setPhone(e.target.value);
-    const getState = e => setStatus(e.target.value);
-
     if (!initDatos) {
         getEmployees();
         setInitDatos(true)
@@ -159,8 +146,8 @@ export function Employees(){
             <div className="right">
 
                 {/* <Filter data={Filters}/> */}
-                <ButtonCleanFilters text={"Clean Filters"} cleanFilters={() => {cleanFilter(filters, setStates, getEmployees)}}/>
-                <Button className="Button" text="Search" onClick={() => {cleanStates(); toggleSearchModal()}}/>
+                <ButtonCleanFilters filters={filters} states={states} get={getEmployees}/>
+                <Button className="Button" text="Search" onClick={() => {cleanStates(states); toggleSearchModal()}}/>
                 <Button className="Button" text="Add Employee" onClick={toggleAddModal} />
             </div>
         </div>
@@ -168,26 +155,26 @@ export function Employees(){
 
         <Modal State={isSearchModalActive} ChangeState={toggleSearchModal} Title="Search">
             <div className="ModalBody">
-                <TextInput id="id" text="Employee ID" onChange={getID} value={id}/>
-                <TextInput id="name" text="Employee Name" onChange={getName} value={name}/>
-                <TextInput id="rut" text="Employee Rut" onChange={getRut} value={rut}/>
-                <TextInput id="email" text="Employee Mail" onChange={getEmail} value={email}/>
-                <TextInput id="direction" text="Employee Direction" onChange={getDirection} value={direction}/>
-                <TextInput id="phone" text="Employee Phone" onChange={getPhone} value={phone}/>
-                <Button text="Search" onClick = {() => {filter();toggleSearchModal();}}/>
+                <TextInput id="id" text="Employee ID" setValue={setId} value={id}/>
+                <TextInput id="name" text="Employee Name" setValue={setName} value={name}/>
+                <TextInput id="rut" text="Employee Rut" setValue={setRut} value={rut}/>
+                <TextInput id="email" text="Employee Mail" setValue={setEmail} value={email}/>
+                <TextInput id="direction" text="Employee Direction" setValue={setDirection} value={direction}/>
+                <TextInput id="phone" text="Employee Phone" setValue={setPhone} value={phone}/>
+                <Button text="Search" onClick = {() => {filter(filters, states, getEmployees); toggleSearchModal();}}/>
             </div>
         </Modal>
 
         <Modal State={isUpdateModalActive} ChangeState={toggleUpdateModal} Title="Update Employee">
             <div className="ModalBody">
                 <div className="ModalRight">
-                    <TextInput id="name" text="Employee Name" onChange={getName} value={name}/>
-                    <TextInput id="rut" text="Employee Rut" onChange={getRut} value={rut}/>
-                    <TextInput id="email" text="Employee Mail" onChange={getEmail} value={email}/>
-                    <TextInput id="direction" text="Employee Direction" onChange={getDirection} value={direction}/>
-                    <TextInput id="phone" text="Employee Phone" onChange={getPhone} value={phone}/>
+                    <TextInput id="name" text="Employee Name" setValue={setName} value={name}/>
+                    <TextInput id="rut" text="Employee Rut" setValue={setRut} value={rut}/>
+                    <TextInput id="email" text="Employee Mail" setValue={setEmail} value={email}/>
+                    <TextInput id="direction" text="Employee Direction" setValue={setDirection} value={direction}/>
+                    <TextInput id="phone" text="Employee Phone" setValue={setPhone} value={phone}/>
                     <ButtonFile id="file" text="File" accept="image/png, image/jpg, image/gif, image/jpeg" />
-                    <SelectionInput id="status" text="Employee Status" options={States} onChange={getState} selected={status}/>
+                    <SelectionInput id="status" text="Employee Status" options={States} setValue={setStatus} value={status}/>
                 </div>
                 <br/>
                 <br/>
@@ -209,11 +196,11 @@ export function Employees(){
         <Modal State={isAddModalActive} ChangeState={toggleAddModal} Title="Add Employee">
             <div className="ModalBody">
                 <div className="ModalRight">
-                    <TextInput id="name" text="Employee Name" onChange={getName}/>
-                    <TextInput id="rut" text="Employee Rut" onChange={getRut}/>
-                    <TextInput id="email" text="Employee Mail" onChange={getEmail}/>
-                    <TextInput id="direction" text="Employee Direction" onChange={getDirection}/>
-                    <TextInput id="phone" text="Employee Phone" onChange={getPhone}/>
+                    <TextInput id="name" text="Employee Name" setValue={setName}/>
+                    <TextInput id="rut" text="Employee Rut" setValue={setRut}/>
+                    <TextInput id="email" text="Employee Mail" setValue={setEmail}/>
+                    <TextInput id="direction" text="Employee Direction" setValue={setDirection}/>
+                    <TextInput id="phone" text="Employee Phone" setValue={setPhone}/>
                     <ButtonFile id="ChooseFile" accept="image/png, image/jpg, image/gif, image/jpeg" />
                 </div>
                 <br/>

@@ -9,7 +9,7 @@ import { Inventory } from "./Inventory";
 
 import styled from "styled-components";
 import Login from './Login/Login';
-import Signup from './Login/Signup';
+// import Signup from './Login/Signup';
 import { auth, logout } from '../firebase';
 import { useState, useEffect } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
@@ -50,6 +50,7 @@ function App() {
 
   return (
     <>
+      {console.log(user)}
       {logged ? <Navbar/> : null}
       
 
@@ -77,9 +78,9 @@ function App() {
           <Route element={<SpecialRoute/>}>
             <Route path='/Login' element={<Login/>}/>
           </Route>
-          <Route element={<SpecialRoute/>}>
+          {/* <Route element={<SpecialRoute/>}>
             <Route path='/Signup' element={<Signup/>}/>
-          </Route>          
+          </Route> */}
 
           <Route element={<ProtectedRoute/>}>
             <Route path='*' element={<DashBoard/>}/>

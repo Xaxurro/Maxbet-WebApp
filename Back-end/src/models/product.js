@@ -156,6 +156,16 @@ ProductSchema.statics.getFilter = function (filter) {
     return this.find(query).sort('serial');
 };
 
+ProductSchema.statics.getCount = function (filter) {
+    // Busca los docs que pasen por el filtro de la funcion find
+    // Despues envia los datos
+    const query = {};
+
+    if (filter.state) query.state = { $eq: filter.state };
+
+    return this.countDocuments(query);
+};
+
 ProductSchema.statics.unRegister = function (serial) {
     // Si no existe el serial, arrojara un Error
     if(!serial) throw new Error('serial is required');

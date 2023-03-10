@@ -8,6 +8,7 @@ router.post('/', productController.register);
 router.patch('/', productController.update);
 router.get('/', productController.getAll);
 router.put('/', productController.getFilter);
+router.put('/count', productController.getCount);
 router.delete('/', productController.unRegister);
 
 // Exporta las rutas a app.js

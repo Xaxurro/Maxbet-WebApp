@@ -47,9 +47,20 @@ module.exports.getAll = function (req, res) {
     }
 }
 
-module.exports.filter = function (req, res) {
+module.exports.getFilter = function (req, res) {
     try {
         EmployeeModel.getFilter(req.body)
+        .then(data => {
+            response.getAllData(req, res, data);
+        }).catch(error => response.error(req, res, error.message, 200));
+    } catch (error) {
+        response.error(req, res, error.message);
+    }
+}
+
+module.exports.getCount = function (req, res) {
+    try {
+        EmployeeModel.getCount(req.body)
         .then(data => {
             response.getAllData(req, res, data);
         }).catch(error => response.error(req, res, error.message, 200));
