@@ -7,6 +7,7 @@ const employeeController = require('../controllers/employeeController');
 router.post('/', employeeController.signup);
 router.patch('/', employeeController.update);
 router.get('/', employeeController.getAll);
+router.put('/', employeeController.filter);
 router.delete('/', employeeController.deleteAccount);
 
 // Exporta las rutas a app.js

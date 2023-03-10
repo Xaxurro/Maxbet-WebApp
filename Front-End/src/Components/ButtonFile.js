@@ -9,9 +9,8 @@ const ButtonFile = ({id, accept, text}) => {
     return(
         <>
             <br/>
-            <label htmlFor={id}>{text}: <br/>
-                <input id={id} className="ButtonFile" type="file" accept={accept}/>
-            </label>
+            <label htmlFor={id}>{text}: </label><br/>
+            <input id={id} className="ButtonFile" type="file" accept={accept}/><br/>
         </>
     );
 }

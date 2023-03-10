@@ -7,7 +7,7 @@ const isValidRut = require('../helpers/isValidRut');
 // Estructura del documento inicial en Mongo, para más info:
 // https://mongoosejs.com/docs/schematypes.html
 const EmployeeSchema = mongoose.Schema({
-    _id: Number,
+    _id: String,
     name: {
         type: String,
         require: true,
@@ -68,16 +68,12 @@ EmployeeSchema.statics.signup = function (employeeInfo) {
         // SELECT *
         
         model.findOne().sort({_id:-1}).then(RESULT => {
-            let maxID;
-            if (RESULT === null) {
-                maxID = 0;
-            } else {
-                maxID = RESULT._id;
-            }
+            let maxID = 0;
+            if (RESULT != null) maxID = parseInt(RESULT._id);
             
             // Crea el documento
-            const newemployee = {
-                _id: maxID + 1,
+            const newEmployee = {
+                _id: (maxID + 1).toString(),
                 name: employeeInfo.name,
                 email: employeeInfo.email,
                 password: bcrypt.hashSync(employeeInfo.email, 9),
@@ -89,7 +85,7 @@ EmployeeSchema.statics.signup = function (employeeInfo) {
             };
             
             // Lo encia a la DB
-            return this.create(newemployee);
+            return this.create(newEmployee);
         });
     })
     .then(employeeCreated => employeeCreated);
@@ -128,7 +124,23 @@ EmployeeSchema.statics.update = function (id, employeeInfo) {
 EmployeeSchema.statics.getAll = function () {
     // Busca los docs que pasen por el filtro de la funcion find
     // Despues envia los datos
-    return this.find();
+    return this.find().sort('_id');
+};
+
+EmployeeSchema.statics.getFilter = function (filter) {
+    // Busca los docs que pasen por el filtro de la funcion find
+    // Despues envia los datos
+    const query = {};
+
+    if (filter.email) query.email = { $regex: filter.email, $options: "i" };
+    if (filter.name) query.name = { $regex: filter.name, $options: "i" };
+    if (filter.direction) query.direction = { $regex: filter.direction, $options: "i" };
+    if (filter.rut) query.rut = { $regex: filter.rut, $options: "i" };
+    if (filter.phone) query.phone = { $regex: filter.phone, $options: "i" };
+    if (filter.id) query._id = { $regex: filter.id };
+    console.log(query);
+
+    return this.find(query).sort('_id');
 };
 
 EmployeeSchema.statics.deleteAccount = function (id) {

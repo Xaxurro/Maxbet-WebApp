@@ -15,7 +15,7 @@ export default function Delivered() {
     const Titles = [{ heading: 'Serial', value: "serial" }, { heading: 'Item Name', value: "name" }, { heading: 'Origin', value: "origin" }, { heading: 'Owner Name', value: "owner" }, { heading: 'Status', value: "state" }];
 
 
-    const TitlesHistory = [{ heading: 'date', value: "date" }, { heading: 'change', value: "change" }, { heading: 'comment', value: "comment" }];
+    const TitlesHistory = [{ heading: 'Date', value: "date" }, { heading: 'Change', value: "change" }, { heading: 'Key', value: "key" }, { heading: 'Value', value: "value" }];
     
     
     const [isConfirmDeleteModalActive, setConfirmDeleteModalState] = useState(false);
@@ -30,16 +30,26 @@ export default function Delivered() {
 
     
     const getItems = () => {
-    
-    const filter = {state: "delivered"}
-    sendRequest(URL, filter, "PUT")
-        .then(response => response.json())
-        .then(json => {
-            if (json.success) return json.data;
-            return [];
-        })
-        .then(data => setItems([...data]));
-        }
+        const filter = {state: "delivered"}
+        sendRequest(URL, filter, "PUT")
+            .then(response => response.json())
+            .then(json => {
+                if (json.success) return json.data;
+                return [];
+            })
+            .then(data => setItems([...data]));
+    }
+
+    const recover = () => {
+        const data = {
+            serial: ISerial,
+            product: {
+                state: "received",
+            }
+        };
+
+        sendRequest(URL, data, 'PATCH', getItems);
+    }
 
 
     if (!initDatos) {
@@ -52,25 +62,15 @@ export default function Delivered() {
         }, UPDATETIME);
     }, []);
     
-    const [OldSerial, setOldSerial] = useState("");
-    const [IName, setIName] = useState("");
     const [ISerial, setISerial] = useState("");
-    const [IOrigin, setIOrigin] = useState("");
-    const [IOwner, setIOwner] = useState("");
-    const [IState, setIState] = useState("");
     const [Ihistory , setIhistory] = useState([])
     
     const setUpdateModalData = (index) => {
         setISerial(items[index].serial);
-        setIName(items[index].name);
-        setIOrigin(items[index].origin);
-        setIOwner(items[index].owner);
-        setOldSerial(items[index].serial);
         setIhistory(items[index].history);
         toggleUpdateModal();
     }
     const deleteItem = ID => {
-        console.log(ID);
         const item = {
             serial: ID
         };
@@ -85,19 +85,18 @@ export default function Delivered() {
             <h1><i>Delivered</i></h1>
             <div className="right">
                 <Button className="Button" text="Search" />
-                <Button className="Button" text="Add Employee"  />
+                {/* <Button className="Button" text="Add Employee"  /> */}
             </div>
         </div>
         <Modal State={isUpdateModalActive} ChangeState={toggleUpdateModal} Title="History">
-
+            <Button text='Recover Item' onClick={() => {recover(); toggleUpdateModal()}}/>
+            <Button text='Delete Item' onClick={toggleConfirmDeleteModal}/>
             <br />
             <br />
             <Table data = {Ihistory} column={TitlesHistory} />
             <br />
             <br />
             <br />
-            <Button text='Update Item' type='submit'/>
-            <Button text='Delete Item' onClick={toggleConfirmDeleteModal}/>
             <Modal State={isConfirmDeleteModalActive} ChangeState={toggleConfirmDeleteModal} Title="Confirm?">
                 <Button text='Delete Item' onClick={() => deleteItem(ISerial)}/>
                 <Button text='Cancel' onClick={toggleConfirmDeleteModal}/>

@@ -36,7 +36,7 @@ export function Inventory() {
     const [state, setState] = useState("");
 
 
-    const toggleSearchmodal = () =>{
+    const toggleSearchModal = () =>{
         setSearchModalState(!isSearchModalActive);
     }
     const toggleConfirmDeleteModal = () =>{
@@ -158,18 +158,18 @@ export function Inventory() {
                 <h1><i>Inventory</i></h1>
                 <div className="right">
                     
-                    <Button className="Button" text="Search" onClick={() => {cleanStates(); toggleSearchmodal();}} />
+                    <Button className="Button" text="Search" onClick={() => {cleanStates(); toggleSearchModal();}} />
                     <Button className="Button" text="Add Item" onClick={() => {cleanStates(); toggleAddModal();}} />
                 </div>
             </div>
 
-            <Modal State={isSearchModalActive} ChangeState={toggleSearchmodal} Title="Search">
+            <Modal State={isSearchModalActive} ChangeState={toggleSearchModal} Title="Search">
                 <div className="ModalBody">
                     <TextInput id="serial" text="Item Serial" onChange={getSerial} value={serial}/>
                     <TextInput id="name" text="Item Name" onChange={getName} value={name}/>
                     <TextInput id="origin" text="Item Origin" onChange={getOrigin} value={origin}/>
                     <TextInput id="owner" text="Item Owner" onChange={getOwner} value={owner}/>
-                    <Button text="Search" onClick = {() => {filter();toggleSearchmodal();}}/>
+                    <Button text="Search" onClick = {() => {filter();toggleSearchModal();}}/>
                 </div>
             </Modal>
 
@@ -182,12 +182,9 @@ export function Inventory() {
                         <TextInput id="name" text="Item Name" onChange={getName} value={name}/>
                         <TextInput id="origin" text="Item Origin" onChange={getOrigin} value={origin}/>
                         <TextInput id="owner" text="Item Owner" onChange={getOwner} value={owner}/>
-                        <SelectionInput id="state" text="Item State" options={States} onChange={getState} value={state}/>
                         <ButtonFile id="ChooseFile" accept="image/png, image/jpg, image/gif, image/jpeg" text="Item File"/>
+                        <SelectionInput id="state" text="Item State" options={States} onChange={getState} value={state}/>
                     </div>
-                    <br />
-                    <br />
-                    <br />
                     <br />
                     <br />
                     <Button text='Update Item' onClick={update}/>

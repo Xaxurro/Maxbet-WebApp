@@ -21,7 +21,6 @@ module.exports.signup = function (req, res) {
 
 module.exports.update = function (req, res) {
     // Devuelve un Error si no encuentra un 'employee' en la request
-    console.log(req.body);
     if (!req.body.employee) return response.error(req, res, 'employee info not found', 200);
 
     try {
@@ -40,6 +39,17 @@ module.exports.update = function (req, res) {
 module.exports.getAll = function (req, res) {
     try {
         EmployeeModel.getAll()
+        .then(data => {
+            response.getAllData(req, res, data);
+        }).catch(error => response.error(req, res, error.message, 200));
+    } catch (error) {
+        response.error(req, res, error.message);
+    }
+}
+
+module.exports.filter = function (req, res) {
+    try {
+        EmployeeModel.getFilter(req.body)
         .then(data => {
             response.getAllData(req, res, data);
         }).catch(error => response.error(req, res, error.message, 200));
