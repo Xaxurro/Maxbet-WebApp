@@ -2,11 +2,11 @@ import { Button } from "../Components/Button"
 import { ButtonFile } from "../Components/ButtonFile"
 import { ButtonCleanFilters } from "../Components/ButtonCleanFilters";
 import { Table } from "../Components/Table";
-// import { Filter } from "../Components/Filter";
 import { Modal } from "../Components/Modal";
 import { useState, useEffect } from "react";
 import { TextInput } from "../Components/TextInput";
 import { SelectionInput } from "../Components/SelectionInput";
+
 import { sendRequest } from "../Helpers/sendRequest";
 import { cleanStates } from "../Helpers/cleanStates";
 import { filter } from "../Helpers/filter";
@@ -51,9 +51,11 @@ export function Inventory() {
     const toggleSearchModal = () =>{
         setSearchModalState(!isSearchModalActive);
     }
+
     const toggleConfirmDeleteModal = () =>{
         setConfirmDeleteModalState(!isConfirmDeleteModalActive);
     }
+
     const toggleAddModal = () => {
         setAddModalState(!isAddModalActive);
     }
@@ -158,7 +160,7 @@ export function Inventory() {
                     <TextInput id="name" text="Item Name" setValue={setName} value={name}/>
                     <TextInput id="origin" text="Item Origin" setValue={setOrigin} value={origin}/>
                     <TextInput id="owner" text="Item Owner" setValue={setOwner} value={owner}/>
-                    <Button text="Search" onClick = {() => {filter(filters, states, getItems);toggleSearchModal();}}/>
+                    <Button text="Search" onClick = {() => {filter(filters, states, getItems); toggleSearchModal();}}/>
                 </div>
             </Modal>
 

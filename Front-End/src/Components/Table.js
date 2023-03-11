@@ -26,7 +26,6 @@ const Icons ={
 const Table = ({data, column, setModalData}) => {
     return (
         <div>
-            {console.log(data)}
             <h2><i>Quantity: {data.length}</i></h2>
             <table>
                 <thead className="TableHead">

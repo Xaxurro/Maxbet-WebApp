@@ -50,7 +50,7 @@ function App() {
 
   return (
     <>
-      {console.log(user)}
+      {/* {console.log(user)} */}
       {logged ? <Navbar/> : null}
       
 

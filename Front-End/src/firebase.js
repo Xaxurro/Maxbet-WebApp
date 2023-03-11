@@ -49,40 +49,40 @@ const logInWithEmailAndPassword = (email, password, navigate) => {
 //////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////
-/**
- * Método para registrarse. 
- * Cuando el usuario se registra se le envia un correo para verificar la nueva cuenta.
- * El usuario es redirigido al login.
- * 
- * @param {*} email : Correo del usuario
- * @param {*} password : Contraseña del usuario
- * @param {*} navigate : Hook de navegacion.
- */
-const registerWithEmailAndPassword = (email, password,navigate) => {
+// //////////////////////////////////////////////////////////////
+// /**
+//  * Método para registrarse. 
+//  * Cuando el usuario se registra se le envia un correo para verificar la nueva cuenta.
+//  * El usuario es redirigido al login.
+//  * 
+//  * @param {*} email : Correo del usuario
+//  * @param {*} password : Contraseña del usuario
+//  * @param {*} navigate : Hook de navegacion.
+//  */
+// const registerWithEmailAndPassword = (email, password,navigate) => {
 
-  createUserWithEmailAndPassword(auth, email, password).then((userCredential) => {
-    // Signed in            
-    const user = userCredential.user;
-    sendEmailVerification(user);
-    navigate("/login")
-    // ...
-  })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      console.log(errorCode, errorMessage);
-      // ..
-    });;
-//////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////
+//   createUserWithEmailAndPassword(auth, email, password).then((userCredential) => {
+//     // Signed in            
+//     const user = userCredential.user;
+//     sendEmailVerification(user);
+//     navigate("/login")
+//     // ...
+//   })
+//     .catch((error) => {
+//       const errorCode = error.code;
+//       const errorMessage = error.message;
+//       console.log(errorCode, errorMessage);
+//       // ..
+//     });;
+// };
+// //////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////
 /**
  * Metodo para solicitar un reset de contraseña.
  * El boton que llama esta funcion aun no ha sido implementado
  */
-};
 const sendPasswordReset = async (email) => {
   try {
     await sendPasswordResetEmail(auth, email);
@@ -111,7 +111,7 @@ export {
   app,
   auth,
   logInWithEmailAndPassword,
-  registerWithEmailAndPassword,
+  // registerWithEmailAndPassword,
   sendPasswordReset,
   logout,
 };
