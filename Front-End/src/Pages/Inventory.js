@@ -16,7 +16,8 @@ import "../Css/Modal.css"
 
 // const Filters = ["Item id", "Item Name", "Origin", "Owner Name", "Status"]
 const Titles = [{ heading: 'Serial', value: "serial" }, { heading: 'Item Name', value: "name" }, { heading: 'Origin', value: "origin" }, { heading: 'Owner Name', value: "owner" }, { heading: 'Status', value: "state" }];
-const States = [{name: "Recibido", id:"received"}, {name: "Entregado", id:"delivered"}];
+const TitlesHistory = [{ heading: 'Date', value: "date" }, { heading: 'Change', value: "change" }, { heading: 'Key', value: "key" }, { heading: 'Value', value: "value" }];
+const itemStates = [{name: "Recibido", id:"received"}, {name: "Entregado", id:"delivered"}];
 const UPDATETIME = 60000;
 const URL = "http://localhost:5000/product/";
 
@@ -29,6 +30,7 @@ export function Inventory() {
     
     const [initDatos, setInitDatos] = useState(false);
     const [items, setItems] = useState([]);
+    const [responseMessage, setResponseMessage] = useState("");
     const [filters, setFilters] = useState({state: "received"});
 
     const [oldSerial, setOldSerial] = useState("");
@@ -37,14 +39,17 @@ export function Inventory() {
     const [origin, setOrigin] = useState("");
     const [owner, setOwner] = useState("");
     const [state, setState] = useState("");
+    const [history , setHistory] = useState([]);
+    const [activeTabUpdateModal, setActiveTabUpdateModal] = useState(0);
 
     const states = [
-        {name: "oldSerial", value: oldSerial, set: setOldSerial},
-        {name: "serial", value: serial, set: setSerial},
-        {name: "name", value: name, set: setName},
-        {name: "origin", value: origin, set: setOrigin},
-        {name: "owner", value: owner, set: setOwner},
-        {name: "state", value: state, set: setState},
+        {name: "oldSerial", value: oldSerial, set: setOldSerial, default: ""},
+        {name: "serial", value: serial, set: setSerial, default: ""},
+        {name: "name", value: name, set: setName, default: ""},
+        {name: "origin", value: origin, set: setOrigin, default: ""},
+        {name: "owner", value: owner, set: setOwner, default: ""},
+        {name: "state", value: state, set: setState, default: ""},
+        {name: "history", value: history, set: setHistory, default: []},
     ];
 
 
@@ -71,6 +76,7 @@ export function Inventory() {
         setOrigin(items[index].origin);
         setOwner(items[index].owner);
         setState(items[index].state);
+        setHistory(items[index].history)
         toggleUpdateModal();
     }
 
@@ -95,7 +101,7 @@ export function Inventory() {
             }
         }
 
-        sendRequest(URL, data, 'POST', getItems);
+        sendRequest(URL, data, 'POST', setResponseMessage, getItems).then(() => console.log(responseMessage));
     }
 
     const update = () => {
@@ -110,7 +116,7 @@ export function Inventory() {
             }
         };
 
-        sendRequest(URL, data, 'PATCH', getItems).then(() => toggleUpdateModal());
+        sendRequest(URL, data, 'PATCH', setResponseMessage, getItems).then(() => toggleUpdateModal());
     }
 
     const remove = serial => {
@@ -118,9 +124,37 @@ export function Inventory() {
             serial: serial
         };
 
-        sendRequest(URL, item, 'DELETE', getItems).then(() => {toggleConfirmDeleteModal(); toggleUpdateModal();});
+        sendRequest(URL, item, 'DELETE', setResponseMessage, getItems).then(() => {toggleConfirmDeleteModal(); toggleUpdateModal();});
     }
 
+
+    const updateModalContent = [
+        <div className="ModalBody">
+            <div className="ModalRight">
+                <TextInput id="serial" text="Item Serial" setValue={setSerial} value={serial}/>
+                <TextInput id="name" text="Item Name" setValue={setName} value={name}/>
+                <TextInput id="origin" text="Item Origin" setValue={setOrigin} value={origin}/>
+                <TextInput id="owner" text="Item Owner" setValue={setOwner} value={owner}/>
+                <ButtonFile id="ChooseFile" accept="image/png, image/jpg, image/gif, image/jpeg" text="Item File"/>
+                <SelectionInput id="state" text="Item State" options={itemStates} setValue={setState} value={state}/>
+            </div>
+            <br />
+            <br />
+            <Button text='Update Item' onClick={update}/>
+            <Button text='Delete Item' onClick={toggleConfirmDeleteModal}/>
+            <Button text='Cancel' onClick={toggleUpdateModal}/>
+            <Modal State={isConfirmDeleteModalActive} ChangeState={toggleConfirmDeleteModal} Title="Confirm?">
+                <Button text='Delete Item' onClick={() => remove(oldSerial)}/>
+                <Button text='Cancel' onClick={toggleConfirmDeleteModal}/>
+            </Modal>
+        </div>,
+        <div className="ModalBody">
+            <Table data = {history} column={TitlesHistory} />
+        </div>,
+        <div className="ModalBody">
+            <Table data = {history} column={TitlesHistory} />
+        </div>,
+    ];
 
     /**
      * En la linea 17 se crea un hook que mantiene el estado de la inicializacion de los datos,
@@ -167,25 +201,10 @@ export function Inventory() {
 
 
             <Modal State={isUpdateModalActive} ChangeState={toggleUpdateModal} Title="Update Item">
-                <div className="ModalBody">
-                    <div className="ModalRight">
-                        <TextInput id="serial" text="Item Serial" setValue={setSerial} value={serial}/>
-                        <TextInput id="name" text="Item Name" setValue={setName} value={name}/>
-                        <TextInput id="origin" text="Item Origin" setValue={setOrigin} value={origin}/>
-                        <TextInput id="owner" text="Item Owner" setValue={setOwner} value={owner}/>
-                        <ButtonFile id="ChooseFile" accept="image/png, image/jpg, image/gif, image/jpeg" text="Item File"/>
-                        <SelectionInput id="state" text="Item State" options={States} setValue={setState} value={state}/>
-                    </div>
-                    <br />
-                    <br />
-                    <Button text='Update Item' onClick={update}/>
-                    <Button text='Delete Item' onClick={toggleConfirmDeleteModal}/>
-                    <Button text='Cancel' onClick={toggleUpdateModal}/>
-                    <Modal State={isConfirmDeleteModalActive} ChangeState={toggleConfirmDeleteModal} Title="Confirm?">
-                        <Button text='Delete Item' onClick={() => remove(oldSerial)}/>
-                        <Button text='Cancel' onClick={toggleConfirmDeleteModal}/>
-                    </Modal>
-                </div>
+                <Button text='Update' onClick={() => {setActiveTabUpdateModal(0);}}/>
+                <Button text='History' onClick={() => {setActiveTabUpdateModal(1);}}/>
+                <Button text='Nested Products' onClick={() => {setActiveTabUpdateModal(1);}}/>
+                {updateModalContent[activeTabUpdateModal]}
             </Modal>
 
 

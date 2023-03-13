@@ -1,4 +1,4 @@
-const sendRequest = (url, body = {}, method = 'GET', getFunction) => {
+const sendRequest = (url, body = {}, method = 'GET', setState, getFunction) => {
     if (method === 'GET') return fetch(url, {method: method}) 
     if (!getFunction) return fetch(url, {
         method: method,
@@ -16,7 +16,8 @@ const sendRequest = (url, body = {}, method = 'GET', getFunction) => {
         },
         body: JSON.stringify(body)
     })
-    .then(response => console.log(response.json()))
+    .then(response => response.json())
+    .then(json => {setState(json.message); console.log(json);})
     .then(() => getFunction());
 };
 

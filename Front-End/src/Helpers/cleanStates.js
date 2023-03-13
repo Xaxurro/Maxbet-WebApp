@@ -1,6 +1,6 @@
 const cleanStates = (states = []) => {
     states.forEach(state => {
-        state.set("");
+        state.set(state.default);
     });
 };
 
