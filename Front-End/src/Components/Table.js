@@ -1,4 +1,7 @@
+import { useState } from "react";
+import Pagination from 'react-paginate';
 import "../Css/Table.css"
+import "../Css/Pagination.css"
 
 
 const Icons ={
@@ -21,9 +24,18 @@ const Icons ={
         <svg fill="#E10808"xmlns="http://www.w3.org/2000/svg" width="30" height="22"  viewBox="0 0 16 16">
         <path  d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm6.146-2.854a.5.5 0 0 1 .708 0L14 6.293l1.146-1.147a.5.5 0 0 1 .708.708L14.707 7l1.147 1.146a.5.5 0 0 1-.708.708L14 7.707l-1.146 1.147a.5.5 0 0 1-.708-.708L13.293 7l-1.147-1.146a.5.5 0 0 1 0-.708z"/>
         </svg>
-    }
+}
+
+
 
 const Table = ({data, column, setModalData}) => {
+    const [currentPage, setCurrentPage] = useState(0);
+    const entriesPerPage = 20;
+    const startIndex = currentPage * entriesPerPage;
+    const endIndex = startIndex + entriesPerPage;
+    const entriesToShow = data.slice(startIndex, endIndex);
+
+    
     return (
         <div>
             <h2><i>Quantity: {data.length}</i></h2>
@@ -32,7 +44,7 @@ const Table = ({data, column, setModalData}) => {
                     <tr key={"headers"}>{column.map((item, index)=>(<TableHeadItem item={item}/>) )}</tr>
                 </thead>
                 <tbody key={"body"}>
-                    {data.map((item, index) => 
+                    {entriesToShow.map((item, index) => 
                         <><tr key={index} onClick={() => setModalData(index)}>
                         {column.map((columnItem, i) => {
                             if (columnItem.heading === 'Employee Status') return (<td>{Icons[item[`status`]]}</td>);
@@ -45,6 +57,7 @@ const Table = ({data, column, setModalData}) => {
                     )}
                 </tbody>
             </table>
+            <Pagination pageCount={Math.ceil(data.length / entriesPerPage)} onPageChange={({ selected }) => setCurrentPage(selected)} className="pagination"/>
         </div>
     );
 }
